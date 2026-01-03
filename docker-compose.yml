@@ -1,6 +1,6 @@
 services:
 
-  web:
+  web: #это название контейнеров , а также выступают в качестве адреса между соеденениями контенеров
     image: nginx
 
     ports:
@@ -14,15 +14,16 @@ services:
       - php-fpm
       - postgres
 
-  php-fpm:
+  php-fpm: #это название контейнеров , а также выступают в качестве адреса между соеденениями контенеров
 
     container_name: php-fpm
 
     build: ./docker/php  #докерфайл
     volumes:
-     - /home/user/projects/online-shop:/var/www/html # php-code
+      - /home/user/projects/online-shop:/var/www/html # php-code
+    #  - /home/user/projects/online-shop/src/public:/var/www/html
 
-  postgres:
+  postgres: #это название контейнеров , а также выступают в качестве адреса между соеденениями контенеров
 
     container_name: postgres_db
     image: postgres:13

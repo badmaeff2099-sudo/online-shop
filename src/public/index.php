@@ -4,12 +4,12 @@
 
 $pdo = new PDO ('pgsql:host=postgres;port=5432;dbname=mydb', 'user', 'pwd');
 
-print_r($pdo);
+#print_r($pdo);
 
-$pdo->exec("INSERT INTO users (name, email, password) VALUES ('Ivan', 'ivan@email.com', 'qwerty123')");
-$pdo->exec("DELETE FROM users WHERE id BETWEEN 3 AND 9");
+#$pdo->exec("INSERT INTO users (name, email, password) VALUES ('Ivan', 'ivan@email.com', 'qwerty123')");
+#$pdo->exec("DELETE FROM users WHERE id BETWEEN 3 AND 9");
 
-$statement = $pdo->query("SELECT * FROM users");
+$statement = $pdo->query("SELECT * FROM users WHERE id = 2");
 
 $data = $statement->fetch();
 echo "<pre>";
