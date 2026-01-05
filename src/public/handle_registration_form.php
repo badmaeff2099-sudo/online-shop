@@ -2,16 +2,16 @@
 
 #print_r($_GET);
 
-// $name = $_GET['name']; переместил на 14ю строчку данный код для проверки на иссет
-// $email = $_GET['email']; переместил ниже на проверку на иссет
-// $password = $_GET['psw']; также переместил ниже на проверку наличия
-// $passwordRep = $_GET['psw-rep']; также переместил ниже на проверку наличия
+// $name = $_POST['name']; переместил на 14ю строчку данный код для проверки на иссет
+// $email = $_POST['email']; переместил ниже на проверку на иссет
+// $password = $_POST['psw']; также переместил ниже на проверку наличия
+// $passwordRep = $_POST['psw-rep']; также переместил ниже на проверку наличия
 
 
 $errors = [];
 
-if(isset($_GET['name'])){
-    $name = $_GET['name'];
+if(isset($_POST['name'])){
+    $name = $_POST['name'];
 
     if (strlen($name) < 2 ){
         $errors['name'] = 'имя должно быть больше 2';
@@ -21,8 +21,8 @@ if(isset($_GET['name'])){
 }
 
 
-if(isset($_GET['email'])) {
-    $email = $_GET['email'];
+if(isset($_POST['email'])) {
+    $email = $_POST['email'];
 
     if (strlen($email) < 2) {
         $errors['email'] = 'почта должна быть больше 2';
@@ -34,8 +34,8 @@ if(isset($_GET['email'])) {
     }
 
 
-if(isset($_GET['psw'])) {
-    $password = $_GET['psw'];
+if(isset($_POST['psw'])) {
+    $password = $_POST['psw'];
 
     if (strlen($password) < 2) {
         $errors['psw'] = 'пароль должен быть больше 2';
@@ -45,8 +45,8 @@ if(isset($_GET['psw'])) {
     }
 
 
-if(isset($_GET['psw-rep'])) {
-$passwordRep = $_GET['psw-rep'];
+if(isset($_POST['psw-rep'])) {
+$passwordRep = $_POST['psw-rep'];
 
 if (strlen($passwordRep) < 2 ){
     $errors['psw-rep'] = 'повторный пароль должен быть больше 2';
@@ -63,6 +63,8 @@ if($password !== $passwordRep){
 
 if (empty($errors)){
     $pdo = new PDO ('pgsql:host=postgres;port=5432;dbname=mydb', 'user', 'pwd');
+
+    $password = password_hash($password, PASSWORD_DEFAULT);
 
     $stmt = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
     $stmt->execute(['name'=> $name, 'email'=> $email, 'password' => $password]); #здесь под капотом выполняется метод экранирования против sql инъекции, поэтому метод ниже можно убрать или закомментировать
