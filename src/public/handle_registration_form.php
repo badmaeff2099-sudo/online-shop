@@ -55,11 +55,17 @@ if (strlen($passwordRep) < 2 ){
     $errors['psw-rep'] = 'Повторный пароль должен быть заполнен';
 }
 
-
-if($password !== $passwordRep){
-
+if (
+    isset($_POST['psw'], $_POST['psw-rep']) &&
+    $password !== $passwordRep
+) {
     $errors['psw-rep'] = 'пароли не совпадают';
 }
+
+#if($password !== $passwordRep){
+
+  #  $errors['psw-rep'] = 'пароли не совпадают';
+#}
 
 if (empty($errors)){
     $pdo = new PDO ('pgsql:host=postgres;port=5432;dbname=mydb', 'user', 'pwd');
