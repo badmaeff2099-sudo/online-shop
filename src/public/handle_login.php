@@ -18,7 +18,10 @@ if ($user === false) {
     $passwordDb = $user['password'];
 
     if(password_verify($password, $passwordDb)){
-        require_once './catalog.php';
+        #require_once './catalog.php';
+        setcookie('user_id', $user['id']);
+        header("Location: /catalog.php");
+
 
     } else {
         $errors['username'] = 'username or password incorrect';

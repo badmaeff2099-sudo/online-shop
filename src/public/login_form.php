@@ -1,8 +1,8 @@
 <div class="login">
     <h1>Login</h1>
     <form action="handle_login.php" method="post">
-        <input type="text" name="u" placeholder="Username" required="required" />
-        <input type="password" name="p" placeholder="Password" required="required" />
+        <input type="text" name="username" placeholder="username" required="required" />
+        <input type="password" name="password" placeholder="password" required="required" />
         <button type="submit" class="btn btn-primary btn-block btn-large">Let me in.</button>
     </form>
 </div>
