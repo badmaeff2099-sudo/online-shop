@@ -1,96 +1,91 @@
 <?php
 
-#print_r($_GET);
+ function validate(array $data): array
+ {
+     $errors = [];
 
-// $name = $_POST['name']; переместил на 14ю строчку данный код для проверки на иссет
-// $email = $_POST['email']; переместил ниже на проверку на иссет
-// $password = $_POST['psw']; также переместил ниже на проверку наличия
-// $passwordRep = $_POST['psw-rep']; также переместил ниже на проверку наличия
+     // объявление и валидация данных
+
+     if (isset($data['name'])) {
+         $name = $data['name'];
+         if (strlen($name) < 2) {
+             $errors['name'] = "Имя должно быть больше 2 символов";
+         }
+     } else {
+         $errors['name'] = "Имя должно быть заполнено";
+     }
+
+     if (isset($data['email'])) {
+         $email = $data['email'];
+         if (strlen($email) < 2) {
+             $errors['email'] = "Почта должна быть больше 2 символов";
+         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+             $errors['email'] = "email некорректный";
+         } else {
+             // соединение с БД
+
+             $pdo = new PDO ('pgsql:host=postgres;port=5432;dbname=mydb', 'user', 'pwd');
+             $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = :email");
+             $stmt->execute(['email' => $email]);
+             $count = $stmt->fetchColumn();
+             if ($count > 0) {
+                 $errors['email'] = "Этот Email уже зарегистрирован";
+             }
+         }
+     } else {
+         $errors['email'] = "Почта должна быть заполнена";
+     }
+
+     //  проверка совпадения паролей
+
+     if (isset($data['psw'])) {
+         $password = $data['psw'];
+         if (strlen($password) < 2) {
+             $errors['psw'] = 'пароль должен быть больше 2';
+         }
+         $passwordRep = $data["psw-rep"];
+         if ($password !== $passwordRep) {
+             $errors['psw-rep'] = 'пароли не совпадают';
+         }
+     } else {
+         $errors['psw'] = 'Пароль должен быть заполнен';
+     }
 
 
-$errors = [];
 
-if(isset($_POST['name'])){
-    $name = $_POST['name'];
+     return $errors;
+ }
 
-    if (strlen($name) < 2 ){
-        $errors['name'] = 'имя должно быть больше 2';
-    }
-} else {
-    $errors['name'] = 'Имя должно быть заполнено';
-}
+     $errors = validate($_POST);
 
+ // внесение в БД, если нет ошибок
 
-if(isset($_POST['email'])) {
-    $email = $_POST['email'];
+     if (empty($errors)){
+         $name = $_POST['name'];
+         $email = $_POST['email'];
+         $password = $_POST['psw'];
+         $passwordRep = $_POST['psw-rep'];
+         $password = password_hash($password, PASSWORD_DEFAULT);
 
-    if (strlen($email) < 2) {
-        $errors['email'] = 'почта должна быть больше 2';
-    } elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-        $errors['email'] = 'email некорректный ';
-    }
-} else {
-        $errors['email'] = 'Почта должна быть заполнена';
-    }
+         $pdo = new PDO ('pgsql:host=postgres;port=5432;dbname=mydb', 'user', 'pwd');
 
+// добавление пользователей
 
-if(isset($_POST['psw'])) {
-    $password = $_POST['psw'];
-
-    if (strlen($password) < 2) {
-        $errors['psw'] = 'пароль должен быть больше 2';
-    }
-    } else {
-        $errors['psw'] = 'Пароль должен быть заполнен';
-    }
-
-
-if(isset($_POST['psw-rep'])) {
-$passwordRep = $_POST['psw-rep'];
-
-if (strlen($passwordRep) < 2 ){
-    $errors['psw-rep'] = 'повторный пароль должен быть больше 2';
-}
-} else {
-    $errors['psw-rep'] = 'Повторный пароль должен быть заполнен';
-}
-
-if (
-    isset($_POST['psw'], $_POST['psw-rep']) &&
-    $password !== $passwordRep
-) {
-    $errors['psw-rep'] = 'пароли не совпадают';
-}
-
-#if($password !== $passwordRep){
-
-  #  $errors['psw-rep'] = 'пароли не совпадают';
-#}
-
-if (empty($errors)){
-    $pdo = new PDO ('pgsql:host=postgres;port=5432;dbname=mydb', 'user', 'pwd');
-
-    $password = password_hash($password, PASSWORD_DEFAULT);
-
-    $stmt = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
+$stmt = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
     $stmt->execute(['name'=> $name, 'email'=> $email, 'password' => $password]); #здесь под капотом выполняется метод экранирования против sql инъекции, поэтому метод ниже можно убрать или закомментировать
 
 
-    #$pdo->exec("INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$password')");
 
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
+
+$stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
     $stmt->execute(['email'=> $email]);
-    $data = $stmt->fetch();
-    print_r($data);
+
+     $result = $stmt->fetch();
+    print_r($result);
 }
 
-#else {
- #   print_r($errors);
-#}
-
-require_once './registration_form.phtml';
+require_once './registration_form.php';
 ?>
-
 
 
 

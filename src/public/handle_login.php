@@ -22,7 +22,6 @@ if ($user === false) {
         setcookie('user_id', $user['id']);
         header("Location: /catalog.php");
 
-
     } else {
         $errors['username'] = 'username or password incorrect';
     }
