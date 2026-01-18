@@ -1,8 +1,14 @@
 <div class="login">
     <h1>Login</h1>
-    <form action="handle_login.php" method="post">
+    <form action="/login" method="post">
         <input type="text" name="username" placeholder="username" required="required" />
+        <?php if (isset($errors['username'])): ?>
+            <label style = "color:red "><?php echo $errors['username']; ?> </label>
+        <?php endif; ?>
         <input type="password" name="password" placeholder="password" required="required" />
+        <?php if (isset($errors['password'])): ?>
+            <label style = "color:red "><?php echo $errors['password']; ?> </label>
+        <?php endif; ?>
         <button type="submit" class="btn btn-primary btn-block btn-large">Let me in.</button>
     </form>
 </div>
