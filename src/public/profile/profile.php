@@ -3,13 +3,13 @@
 session_start();
 
 if(isset($_SESSION['userId'])) {
-
+$userId = $_SESSION['userId'];
     $pdo = new PDO ('pgsql:host=postgres;port=5432;dbname=mydb', 'user', 'pwd');
 
-    $stmt = $pdo->query('SELECT * FROM users WHERE id = ' . $_SESSION['userId']);
+    $stmt = $pdo->query('SELECT * FROM users WHERE id = ' . $userId);
 
-    $user = $stmt->fetchAll();
-    require_once './profile/profile_page.php';
+    $user = $stmt->fetch();
+    require_once './profile/profile_page3.php';
 } else {
     header("Location: /login");
 

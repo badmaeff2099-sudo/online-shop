@@ -30,7 +30,17 @@ elseif ($requestUri === '/profile') {
     if ($requestMethod === 'GET') {
         require_once './profile/profile.php';
     } elseif ($requestMethod === 'POST'){
-        require_once './profile/profile_page.php';
+        require_once './profile/profile_page3.php';
+    } else {
+        echo "HTTP метод $requestMethod не работает";
+    }
+}
+// изменение профиля
+elseif ($requestUri === '/editProfile') {
+    if ($requestMethod === 'GET') {
+        require_once './my_profile_form.php';
+    } elseif ($requestMethod === 'POST'){
+        require_once './handle-profile.php';
     } else {
         echo "HTTP метод $requestMethod не работает";
     }
