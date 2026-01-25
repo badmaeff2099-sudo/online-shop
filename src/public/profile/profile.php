@@ -9,7 +9,7 @@ $userId = $_SESSION['userId'];
     $stmt = $pdo->query('SELECT * FROM users WHERE id = ' . $userId);
 
     $user = $stmt->fetch();
-    require_once './profile/profile_page3.php';
+    require_once './profile/profile_page.php';
 } else {
     header("Location: /login");
 

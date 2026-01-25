@@ -23,7 +23,7 @@
         <?php if (isset($errors['psw'])): ?>
             <label style = "color:red "><?php echo $errors['psw']; ?> </label>
         <?php endif; ?>
-        <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+        <input type="password" placeholder="Enter Password" name="psw" id="psw" required> // required - это обязательное для заполнения
 
 
         <label for="psw-repeat"><b>Repeat Password</b></label>

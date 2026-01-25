@@ -14,5 +14,20 @@ if (isset($_SESSION['userId'])) {
     header("Location: /login");
 }
 
+?>
 
 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+</head>
+<body>
+<div class="profile-actions">
+    <button class="edit-profile-btn">
+        <i class="fas fa-edit"></i>
+        <a href="/profile">Мой профиль</a>
+    </button>
+</div>
+</body>
+</html>
