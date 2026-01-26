@@ -20,8 +20,6 @@ function validate(array $data): array
         if (strlen($name) < 2) {
             $errors['name'] = "Имя должно быть больше 2 символов";
         }
-    } else {
-        $errors['name'] = "Имя должно быть заполнено";
     }
 
     if (isset($data['email'])) {
@@ -40,7 +38,7 @@ function validate(array $data): array
 
             $userId = $_SESSION['userId'];
             if ($user['id'] !== $userId) {
-                $errors['email'] = "Этот Email уже зарегистрирован";
+                $errors['email'] = "Этот Email уже зарегистрирован!";
             }
         }
     }
@@ -59,19 +57,16 @@ if(empty($errors)) {
     $userId = $_SESSION['userId'];
 
     $pdo = new PDO ('pgsql:host=postgres;port=5432;dbname=mydb', 'user', 'pwd');
-
     $stmt = $pdo->query("SELECT * FROM users WHERE id =" . $userId);
     $user = $stmt->fetch();
 
     if($user['name'] !== $name) {
-
         $stmt = $pdo->prepare("UPDATE users SET name = :name WHERE id =" . $userId);
         $stmt->execute(['name'=> $name]);
 
     }
 
     if($user['email'] !== $email) {
-
         $stmt = $pdo->prepare("UPDATE users SET email = :email WHERE id = $userId");
         $stmt->execute(['email'=> $email]);
     }

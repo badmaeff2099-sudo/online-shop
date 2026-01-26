@@ -17,6 +17,14 @@ $userId = $_SESSION['userId'];
 ?>
 
 <form action="profile-change" method="POST" class="form-example">
+
+    <div class="profile-actions">
+        <button class="edit-profile-btn">
+            <i class="fas fa-edit"></i>
+            <a href="/profile">Вернуться в мой профиль</a>
+        </button>
+    </div>
+
     <div class="form-example">
         <label for="name">Введите новое имя: </label>
         <?php if (isset($errors['name'])): ?>
@@ -39,8 +47,14 @@ $userId = $_SESSION['userId'];
     </div>
 </form>
 <style>
-    form.form-example{
+    .form-example{
         display: table;
+        margin-bottom: 10px;
     }
+    .profile-actions {
+
+        margin-bottom: 10px;
+    }
+
 
 </style>
