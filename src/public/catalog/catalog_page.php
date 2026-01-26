@@ -1,3 +1,12 @@
+
+<div class="profile-actions">
+    <button class="edit-profile-btn">
+        <i class="fas fa-edit"></i>
+        <a href="/profile">Мой профиль</a>
+    </button>
+</div>
+
+
 <div class="container">
     <h3>Catalog</h3>
     <div class="card-deck">

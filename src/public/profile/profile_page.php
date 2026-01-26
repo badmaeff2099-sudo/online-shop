@@ -12,9 +12,9 @@
 <div class="profile-container">
     <div class="profile-header">
         <div class="header-content">
-            <button class="back-button" onclick="window.history.back()">
+            <button class="back-button" >
                 <i class="fas fa-arrow-l eft"></i>
-                <span>Назад в каталог</span>
+                <a href=" /catalog">Назад в каталог</a>
             </button>
             <h1 class="page-title">Профиль пользователя</h1>
         </div>
@@ -68,13 +68,13 @@
     </div>
 </div>
 
-<script>
+<!--<script>
     // Обработка нажатия кнопки "Изменить профиль"
     document.querySelector('.edit-profile-btn').addEventListener('click', function() {
         alert('Редактирование профиля - функционал в разработке');
         // Здесь можно добавить логику открытия формы редактирования
     });
-</script>
+</script> -->
 </body>
 </html>
 

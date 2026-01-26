@@ -8,7 +8,7 @@ if (isset($_SESSION['userId'])) {
 $userId = $_SESSION['userId'];
     $pdo = new PDO ('pgsql:host=postgres;port=5432;dbname=mydb', 'user', 'pwd');
 
-    $stmt = $pdo->query('SELECT * FROM users');
+    $stmt = $pdo->query("SELECT * FROM users WHERE id = $userId");
     $user = $stmt->fetch();
 } else{
     header("Location: /login");
@@ -18,7 +18,7 @@ $userId = $_SESSION['userId'];
 
 <form action="profile-change" method="POST" class="form-example">
     <div class="form-example">
-        <label for="паме">Введите новое имя: </label>
+        <label for="name">Введите новое имя: </label>
         <?php if (isset($errors['name'])): ?>
             <label style="color:red "><?php echo $errors['name'];?></label>
         <?php endif; ?>
