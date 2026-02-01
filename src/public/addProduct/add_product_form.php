@@ -1,85 +1,151 @@
-<form action="add-product" method = "POST">
-    <div class="container">
-        <h1>Add Product</h1>
+<form action="add-product" method="POST">
+    <div class="page-container">
 
-        <hr>
+        <div class="form-card">
+            <h1 class="form-title">
+                <i class="fas fa-box"></i>
+                Добавить товар в корзину
+            </h1>
 
+            <div class="form-group">
+                <label for="product_id">ID товара</label>
+                <input
+                        type="text"
+                        name="product_id"
+                        id="product_id"
+                        placeholder="Введите ID товара"
+                        required
+                >
+                <?php if (isset($errors['product_id'])): ?>
+                    <div class="error"><?php echo $errors['product_id']; ?></div>
+                <?php endif; ?>
+            </div>
 
-        <label for="product-id"><b>Product-id</b></label>
-        <?php if (isset($errors['product_id'])): ?>
-            <label style = "color:red "><?php echo $errors['product_id']; ?> </label>
-        <?php endif; ?>
-        <input type="text" placeholder="Enter product-id" name="product_id" id="product_id" required>
+            <div class="form-group">
+                <label for="amount">Количество</label>
+                <input
+                        type="number"
+                        name="amount"
+                        id="amount"
+                        placeholder="Введите количество"
+                        min="1"
+                        required
+                >
+                <?php if (isset($errors['amount'])): ?>
+                    <div class="error"><?php echo $errors['amount']; ?></div>
+                <?php endif; ?>
+            </div>
 
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-cart-plus"></i>
+                Добавить товар
+            </button>
+        </div>
 
-        <label for="amount"><b>Amount</b></label>
-        <?php if (isset($errors['amount'])): ?>
-            <label style = "color:red "><?php echo $errors['amount']; ?> </label>
-        <?php endif; ?>
-        <input type="text" placeholder="Enter Amount" name="amount" id="amount" required>
-
-
-
-
-        <button type="submit" class="registerbtn">Add product</button>
     </div>
+</form>
 
-   </form>
-
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-    * {box-sizing: border-box}
-
-    /* Add padding to containers */
-    .container {
-        padding: 16px;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
 
-    /* Full-width input fields */
-    input[type=text], input[type=password] {
-        width: 100%;
-        padding: 15px;
-        margin: 5px 0 22px 0;
-        display: inline-block;
-        border: none;
-        background: #f1f1f1;
+    body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        min-height: 100vh;
+        padding: 40px 20px;
     }
 
-    input[type=text]:focus, input[type=password]:focus {
-        background-color: #ddd;
+    /* Контейнер */
+    .page-container {
+        max-width: 520px;
+        margin: 0 auto;
+    }
+
+    /* Карточка формы */
+    .form-card {
+        background: white;
+        padding: 40px;
+        border-radius: 24px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    /* Заголовок */
+    .form-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 28px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Группа поля */
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .form-group label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #4a5568;
+    }
+
+    .form-group input {
+        padding: 14px 16px;
+        font-size: 16px;
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+        transition: 0.3s;
+    }
+
+    .form-group input:focus {
         outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102,126,234,0.2);
     }
 
-    /* Overwrite default styles of hr */
-    hr {
-        border: 1px solid #f1f1f1;
-        margin-bottom: 25px;
+    /* Ошибки */
+    .error {
+        font-size: 14px;
+        color: #e53e3e;
     }
 
-    /* Set a style for the submit/register button */
-    .registerbtn {
-        background-color: #04AA60;
-        color: white;
-        padding: 16px 20px;
-        margin: 8px 0;
+    /* Кнопка */
+    .submit-btn {
+        margin-top: 10px;
+        padding: 16px;
         border: none;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
         cursor: pointer;
-        width: 100%;
-        opacity: 0.9;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        box-shadow: 0 4px 15px rgba(79,70,229,0.3);
+        transition: 0.3s;
     }
 
-    .registerbtn:hover {
-        opacity:1;
-    }
-
-    /* Add a blue text color to links */
-    a {
-        color: dodgerblue;
-    }
-
-    /* Set a grey backround color and center the text of the "sign in" section */
-    .signin {
-        background-color: #f1f1f1;
-        text-align: center;
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(79,70,229,0.4);
     }
 </style>

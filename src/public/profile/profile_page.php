@@ -13,8 +13,9 @@
     <div class="profile-header">
         <div class="header-content">
             <button class="back-button" >
-                <i class="fas fa-arrow-l eft"></i>
+                <i class="fas fa-arrow-left"></i>
                 <a href=" /catalog">Назад в каталог</a>
+
             </button>
             <h1 class="page-title">Профиль пользователя</h1>
         </div>
@@ -142,6 +143,7 @@
 
     .back-button i {
         font-size: 16px;
+
     }
 
     .page-title {
@@ -250,6 +252,7 @@
         background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         border-top: 1px solid #e2e8f0;
         text-align: center;
+
     }
 
     .edit-profile-btn {
@@ -276,10 +279,17 @@
 
     .edit-profile-btn:active {
         transform: translateY(0);
+
     }
 
     .edit-profile-btn i {
         font-size: 18px;
+    }
+
+    .back-button a,
+    .edit-profile-btn a {
+        color: white;
+        text-decoration: none;
     }
 
 </style>
