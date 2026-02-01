@@ -75,16 +75,14 @@ $stmt = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (:name, 
     $stmt->execute(['name'=> $name, 'email'=> $email, 'password' => $password]); #здесь под капотом выполняется метод экранирования против sql инъекции, поэтому метод ниже можно убрать или закомментировать
 
 
-
-
-$stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
+$stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email"); // для вывода данных зарегистрированного пользователя на экран
     $stmt->execute(['email'=> $email]);
 
-     $result = $stmt->fetch();
-    print_r($result);
+     $result = $stmt->fetch(); // находится массив с данными пользователя: имя, почта, пароль, повторный пароль
+     print_r($result);
 }
 
-require_once './registration_form.php';
+require_once './registration/registration_form.php';
 ?>
 
 

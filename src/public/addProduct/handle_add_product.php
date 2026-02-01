@@ -1,53 +1,75 @@
 <?php
 
-if (!isset($_COOKIE['user_id'])){
-    header("Location: /login_form.php");
+if(session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
 }
-//$errors = [];
+if(!isset($_SESSION['userId'])){
+    header("Location: /login");
+    exit;
+}
 function validate(array $data): array
 {
     $errors = [];
 
-    // объявление и валидация данных
+    if (isset($data['product_id'])) {
+        $productId = (int)$data['product_id'];
 
-    if (empty($data['product_id'])) {
-        $errors['product_id'] = 'ID продукта должно быть заполнено';
-    } elseif (!ctype_digit($data['product_id'])) {
-        $errors['product_id'] = 'ID продукта некорректное';
+        $pdo = new PDO ('pgsql:host=postgres;port=5432;dbname=mydb', 'user', 'pwd');
+
+        $stmt = $pdo->prepare("SELECT * FROM products WHERE id =:productId");
+        $stmt->execute(['productId' => $productId]); #здесь под капотом выполняется метод экранирования против sql инъекции, поэтому метод ниже можно убрать или закомментировать
+        $dataId = $stmt->fetch();
+
+        if ($dataId === false) {
+
+            $errors['product_id'] = "Id продукта не найден";
+        }
+    } else {
+        $errors['product_id'] = 'id продукта должен быть обязательно указан';
     }
 
-    if (empty($data['amount'])) {
-        $errors['amount'] = 'Количество должно быть заполнено';
-    } elseif (!ctype_digit($data['amount'])) {
-        $errors['amount'] = 'Количество продукта некорректное';
+    if (isset($data['amount'])){
+        $amount = (int) $data['amount'];
+
+            if ($amount <= 0) {
+                $errors['amount'] = 'Количество продукта не может равняться 0';
+            }
+
+            elseif (strlen($amount) > 4) {
+            $errors['amount'] = 'некорректное число количества продукта ';
+    }
+        } else {
+        $errors['amount'] = 'Количество продукта должено быть обязательно указано';
     }
 
-     return $errors;
+    return $errors;
 }
 
 $errors = validate($_POST);
 
-// внесение в БД, если нет ошибок
-
-if (empty($errors)){
-    $product_id = $_POST['product_id'];
-    $amount = $_POST['amount'];
-$user_id = $_COOKIE['user_id'];
-
+if(empty($errors)) {
     $pdo = new PDO ('pgsql:host=postgres;port=5432;dbname=mydb', 'user', 'pwd');
+    $userId = $_SESSION['userId'];
+    $productId = $_POST['product_id'];
+    $amount = $_POST['amount'];
 
-// добавление ID и количества продукта в БД
+    $stmt = $pdo->prepare("SELECT * FROM user_products WHERE product_id = :productId AND user_id = :userId");
+    $stmt->execute(['productId' => $productId, 'userId' => $userId]);
+    $data = $stmt->fetch();
 
-    $stmt = $pdo->prepare("INSERT INTO user_products (product_id, amount) VALUES (:product_id, :amount)");
-    $stmt->execute(['product_id'=> $product_id, 'amount'=> $amount]); #здесь под капотом выполняется метод экранирования против sql инъекции, поэтому метод ниже можно убрать или закомментировать
+    if($data === false) {
 
+        $stmt = $pdo->prepare("INSERT INTO user_products (user_id, product_id, amount) VALUES (:userId, :productId, :amount)");
+        $stmt->execute(['userId' =>$userId,'productId' => $productId, 'amount' => $amount]);
+    } else {
 
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE user_id = :user_id");
-    $stmt->execute(['user_id'=> $user_id]);
+        $amount = $data['amount'] + $amount;
+        $stmt = $pdo->prepare("UPDATE user_products SET amount = :amount WHERE  user_id = :userId and product_id = :productId");
+        $stmt->execute(['amount' => $amount, 'userId' =>$userId, 'productId' => $productId]);
+    }
 
-    $result = $stmt->fetch();
-    print_r($result);
+} else {
+
+    require_once './addProduct/add_product_form.php';
 }
 
-require_once './add_product_form.php.php';
-?>

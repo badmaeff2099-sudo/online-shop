@@ -1,4 +1,4 @@
-<form action="handle_add_product.php" method = "POST">
+<form action="add-product" method = "POST">
     <div class="container">
         <h1>Add Product</h1>
 
