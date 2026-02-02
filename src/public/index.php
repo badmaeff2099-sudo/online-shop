@@ -1,14 +1,18 @@
 <?php
 
+
+
 $requestUri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
 // регистрация
 if($requestUri === '/registration') {
+    require_once './classes/User.php';
+    $user = new User();
     if ($requestMethod === 'GET') {
-        require_once './registration/registration_form.php';
+        $user->getRegistrate();
     } elseif ($requestMethod === 'POST') {
-        require_once './registration/handle_registration_form.php';
+        $user->registrate();
     } else {
         echo "$requestMethod для адреса $requestUri не поддерживается";
     }

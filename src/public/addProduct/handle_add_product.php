@@ -36,7 +36,7 @@ function validate(array $data): array
             }
 
             elseif (strlen($amount) > 4) {
-            $errors['amount'] = 'некорректное число количества продукта ';
+            $errors['amount'] = 'некорректное число количества продукта';
     }
         } else {
         $errors['amount'] = 'Количество продукта должено быть обязательно указано';
