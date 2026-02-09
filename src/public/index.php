@@ -20,10 +20,12 @@ if($requestUri === '/registration') {
 }
 // логин
 elseif($requestUri === '/login') {
+    require_once './classes/User.php';
+    $user = new User();
     if ($requestMethod === 'GET') {
-        require_once './login/login_form.php';
+        $user->getLogin();
     } elseif ($requestMethod === 'POST') {
-        require_once './login/handle_login.php';
+        $user->login();
     } else {
         echo "HTTP метод $requestMethod не работает";
     }
@@ -31,20 +33,24 @@ elseif($requestUri === '/login') {
 
 // выдача профиля
 elseif ($requestUri === '/profile') {
+    require_once './classes/User.php';
+    $user = new User();
     if ($requestMethod === 'GET') {
-        require_once './profile/profile.php';
+        $user->profile();
     } elseif ($requestMethod === 'POST'){
-        require_once './profile/profile_page.php';
+        $user->getProfile();
     } else {
         echo "HTTP метод $requestMethod не работает";
     }
 }
 // изменение профиля
 elseif ($requestUri === '/profile-change') {
+    require_once './classes/User.php';
+    $user = new User();
     if ($requestMethod === 'GET') {
-        require_once './editProfile/edit_profile_form.php';
+        $user->getEditProfile();
     } elseif ($requestMethod === 'POST'){
-        require_once './editProfile/handle_edit_profile.php';
+        $user->editProfile();
     } else {
         echo "HTTP метод $requestMethod не работает";
     }
