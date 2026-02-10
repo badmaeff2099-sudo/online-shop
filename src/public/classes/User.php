@@ -101,8 +101,8 @@ class User
     public function getProfile()
     {
         session_start();
-        if (isset($_SESSION['userId'])) {
-            header("Location: /profile");
+        if (!isset($_SESSION['userId'])) {
+            header("Location: /login");
         }
         require_once './pages/profile_page.php';
     }
@@ -159,8 +159,6 @@ class User
                     session_start();
                     $_SESSION['userId'] = $user['id'];
 
-                    // успешный вход через куки
-                    //setcookie('user_id', $user['id']);
                     header("Location: /catalog");
 
                 } else {

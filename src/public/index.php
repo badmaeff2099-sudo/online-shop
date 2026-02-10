@@ -57,17 +57,21 @@ elseif ($requestUri === '/profile-change') {
 }
 // добавление товара
 elseif ($requestUri === '/add-product') {
+    require_once './classes/Product.php';
+    $product = new Product();
     if ($requestMethod === 'GET') {
-        require_once './addProduct/add_product_form.php';
+       $product->getProduct();
           } elseif ($requestMethod === 'POST'){
-            require_once './addProduct/handle_add_product.php';
+            $product->addProduct();
     }
 }
 
 // каталог
 elseif ($requestUri === '/catalog') {
+    require_once './classes/Catalog.php';
+    $catalog = new Catalog();
     if ($requestMethod === 'GET') {
-        require_once './catalog/catalog.php';
+        $catalog->getCatalog();
     }
 }
 
