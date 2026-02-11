@@ -21,7 +21,7 @@ services:
     build: ./docker/php  #докерфайл
     volumes:
       - /home/user/projects/online-shop:/var/www/html # php-code
-    #  - /home/user/projects/online-shop/src/public:/var/www/html
+      - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-xdebug.ini
 
   postgres: #это название контейнеров , а также выступают в качестве адреса между соеденениями контенеров
 

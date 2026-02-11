@@ -30,6 +30,50 @@
                     </div>
                 </div>
             </a>
+            <form action="add-product" method="POST">
+                <div class="page-container">
+
+                    <div class="form-card">
+                        <h1 class="form-title">
+                            <i class="fas fa-box"></i>
+                            Добавить товар в корзину
+                        </h1>
+
+                        <div class="form-group">
+
+                            <input
+                                    type="hidden"
+                                    name="product_id"
+                                    id="product_id"
+                                    placeholder="Введите ID товара"
+                                    value = "<?php echo $product['id']; ?>"
+                                    required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amount">Количество</label>
+                            <input
+                                    type="number"
+                                    name="amount"
+                                    id="amount"
+                                    placeholder="Введите количество"
+                                    min="1"
+                                    required
+                            >
+                            <?php if (isset($errors['amount'])): ?>
+                                <div class="error"><?php echo $errors['amount']; ?></div>
+                            <?php endif; ?>
+                        </div>
+
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-cart-plus"></i>
+                            Добавить товар
+                        </button>
+                    </div>
+
+                </div>
+            </form>
         <?php endforeach; ?>
     </div>
 </div>
