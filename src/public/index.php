@@ -1,12 +1,14 @@
 <?php
 
+
+
 $requestUri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
 // регистрация
 if($requestUri === '/registration') {
-    require_once './classes/User.php';
-    $user = new User();
+    require_once '../Controllers/UserController.php';
+    $user = new UserController();
     if ($requestMethod === 'GET') {
         $user->getRegistrate();
     } elseif ($requestMethod === 'POST') {
@@ -18,8 +20,8 @@ if($requestUri === '/registration') {
 }
 // логин
 elseif($requestUri === '/login') {
-    require_once './classes/User.php';
-    $user = new User();
+    require_once '../Controllers/UserController.php';
+    $user = new UserController();
     if ($requestMethod === 'GET') {
         $user->getLogin();
     } elseif ($requestMethod === 'POST') {
@@ -31,8 +33,8 @@ elseif($requestUri === '/login') {
 
 // выдача профиля
 elseif ($requestUri === '/profile') {
-    require_once './classes/User.php';
-    $user = new User();
+    require_once '../Controllers/UserController.php';
+    $user = new UserController();
     if ($requestMethod === 'GET') {
         $user->profile();
     } elseif ($requestMethod === 'POST'){
@@ -43,8 +45,8 @@ elseif ($requestUri === '/profile') {
 }
 // изменение профиля
 elseif ($requestUri === '/profile-change') {
-    require_once './classes/User.php';
-    $user = new User();
+    require_once '../Controllers/UserController.php';
+    $user = new UserController();
     if ($requestMethod === 'GET') {
         $user->getEditProfile();
     } elseif ($requestMethod === 'POST'){
@@ -55,8 +57,8 @@ elseif ($requestUri === '/profile-change') {
 }
 // добавление товара
 elseif ($requestUri === '/add-product') {
-    require_once './classes/Product.php';
-    $product = new Product();
+    require_once '../Controllers/ProductController.php';
+    $product = new ProductController();
     if ($requestMethod === 'GET') {
        $product->getProduct();
           } elseif ($requestMethod === 'POST'){
@@ -66,8 +68,8 @@ elseif ($requestUri === '/add-product') {
 
 // каталог
 elseif ($requestUri === '/catalog') {
-    require_once './classes/Catalog.php';
-    $catalog = new Catalog();
+    require_once '../Controllers/CatalogController.php';
+    $catalog = new CatalogController();
     if ($requestMethod === 'GET') {
         $catalog->getCatalog();
     }
@@ -79,15 +81,3 @@ else {
     }
 
 
-#$statement = $pdo->query("SELECT * FROM users WHERE id = 2");
-
-#$data = $statement->fetch();
-#echo "<pre>";
-#print_r($data);
-#echo "<pre>";
-
-//elseif ($requestUri === '/handle_login') {
-//require_once './handle_login.php';
-//} elseif ($requestUri === '/catalog') {
-//require_once './catalog.php';
-//}
