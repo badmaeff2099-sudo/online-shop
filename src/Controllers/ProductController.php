@@ -54,7 +54,7 @@ class ProductController
 
             require_once '../Views/add_product_form.php';
         }
-
+header("Location: /catalog");
     }
 
     private function validate(array $data): array
@@ -85,7 +85,7 @@ class ProductController
                 $errors['amount'] = 'некорректное число количества продукта';
             }
         } else {
-            $errors['amount'] = 'Количество продукта должено быть обязательно указано';
+            $errors['amount'] = 'Количество продукта должно быть обязательно указано';
         }
 
         return $errors;

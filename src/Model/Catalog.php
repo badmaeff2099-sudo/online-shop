@@ -1,12 +1,13 @@
 <?php
 
-class Catalog
+require_once "../Model/Model.php";
+
+class Catalog extends Model
 {
     public function getCatalog()
     {
-        $pdo = new PDO ('pgsql:host=postgres;port=5432;dbname=mydb', 'user', 'pwd');
-// если пользователь найден, выдаем каталог
-        $stmt = $pdo->query('SELECT * FROM products');
+       // если пользователь найден, выдаем каталог
+        $stmt = $this->PDO->query('SELECT * FROM products');
         $products = $stmt->fetchAll();
         return $products;
     }

@@ -1,11 +1,8 @@
+
 <!-- Кнопка профиля -->
 <a href="/profile" class="profile-link">
     <i class="fas fa-user"></i>
     Мой профиль
-</a>
-<a href="/cart" class="profile-link">
-    <i class="fas fa-user"></i>
-    Корзина
 </a>
 
 <div class="catalog-container">
@@ -30,7 +27,14 @@
                     </h3>
 
                     <div class="product-price">
-                        <?php echo $product['price']; ?> ₽
+                        <?php echo number_format($product['price'], 0, '.', ' '); ?> ₽
+                    </div>
+                    <div class="product-amount">
+                        Количество: <?php echo $product['amount']; ?>
+                    </div>
+                    <div class="product-totalPrice">
+                        Общая сумма: <?php echo number_format($product['totalPrice'], 1, ',', ' '); ?> ₽
+
                     </div>
                 </div>
             </a>
@@ -218,5 +222,16 @@
         font-weight: 700;
         color: #4f46e5;
     }
-
+    .product-amount {
+        margin-top: 10px;
+        font-size: 18px;
+        font-weight: 700;
+        color: #000000;
+    }
+    .product-totalPrice {
+        margin-top: 10px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #e53e3e;
+    }
 </style>

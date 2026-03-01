@@ -61,6 +61,12 @@ class App
                 'method' => 'getCatalog'
             ],
         ],
+        '/cart' => [
+            'GET' => [
+                'class' => 'CartController',
+                'method' => 'getCart'
+            ],
+        ],
     ];
 
     public function run()
