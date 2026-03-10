@@ -1,7 +1,16 @@
 <?php
+namespace Controller;
+use Model\User;
 
 class UserController
 {
+
+    private User $userModel;
+
+    public function __construct()
+    {
+        $this->userModel = new User();
+    }
     public function getRegistrate()
     {
         session_start();
@@ -23,13 +32,11 @@ class UserController
             $passwordRep = $_POST['psw-rep'];
             $password = password_hash($password, PASSWORD_DEFAULT);
 
-            require_once '../Model/User.php';
-            $userModel = new User();
-
-            $userModel->insertUsers($name, $email, $password); // добавление пользователя
+         
+            $user = $this->userModel->insertUsers($name, $email, $password); // добавление пользователя
 
 
-            $result = $userModel->getByEmail($email);// для вывода данных зарегистрированного пользователя на экран
+            $result = $this->userModel->getByEmail($email);// для вывода данных зарегистрированного пользователя на экран
 
             print_r($result);
         }
@@ -62,9 +69,8 @@ class UserController
                 $errors['email'] = "email некорректный";
             } else {
                 // соединение с БД
-                require_once '../Model/User.php';
-                $userModel = new User();
-                $user = $userModel->getByEmail($email);
+             
+                $user = $this->userModel->getByEmail($email);
                 if ($user !== false) {
                     $errors['email'] = "Этот Email уже зарегистрирован";
                 }
@@ -108,10 +114,10 @@ class UserController
         if (isset($_SESSION['userId'])) {
             $userId = $_SESSION['userId'];
 
-            require_once '../Model/User.php';
-            $userModel = new User();
+          //  require_once '../Model/User.php';
+         //   $userModel = new User();
 
-            $user = $userModel->getById($userId); // getById
+            $user = $this->userModel->getById($userId); // getById
 
             require_once '../Views/profile_page.php';
         } else {
@@ -139,9 +145,9 @@ class UserController
             $password = $_POST['password'];
 
 
-            require_once '../Model/User.php';
-            $userModel = new User();
-            $user = $userModel->getByEmail($username);
+           // require_once '../Model/User.php';
+          //  $userModel = new User();
+            $user = $this->userModel->getByEmail($username);
 
             if (!empty($user)) {
                 $passwordDb = $user['password'];
@@ -211,22 +217,22 @@ class UserController
             $email = $_POST['email'];
             $userId = $_SESSION['userId'];
 
-            require_once '../Model/User.php';
-            $userModel = new User();
+          //  require_once '../Model/User.php';
+         //   $userModel = new User();
 
             /*$pdo = new PDO ('pgsql:host=postgres;port=5432;dbname=mydb', 'user', 'pwd');
             $stmt = $pdo->query("SELECT * FROM users WHERE id =" . $userId);
             $user = $stmt->fetch(); */
 
-            $user = $userModel->getById($userId); // getById
+            $user = $this->userModel->getById($userId); // getById
 
             if ($user['name'] !== $name) {
-               $userModel->updateNameById($name, $userId);
+               $this->userModel->updateNameById($name, $userId);
 
             }
 
             if ($user['email'] !== $email) {
-                $userModel->updateEmailById($email, $userId);
+                $this->userModel->updateEmailById($email, $userId);
             }
             header("Location: /profile");
             exit;
@@ -258,9 +264,9 @@ class UserController
             } else {
                 // соединение с БД
 
-                require_once '../Model/User.php';
-                $userModel = new User();
-                $user = $userModel->getByEmail($email);
+              //  require_once '../Model/User.php';
+              //  $userModel = new User();
+                $user = $this->userModel->getByEmail($email);
 
                 $userId = $_SESSION['userId'];
                 if ($user && $user['id'] !== $userId) {

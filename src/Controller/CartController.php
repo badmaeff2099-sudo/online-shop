@@ -1,4 +1,6 @@
 <?php
+namespace Controller;
+use Model\Cart;
 
 class CartController
 {
@@ -10,14 +12,12 @@ class CartController
 
         if (isset($_SESSION['userId'])) {
 
-            require_once '../Model/Cart.php';
+           // require_once '../Model/Cart.php';
             $cartModel = new Cart();
 
             $userId = $_SESSION['userId'];
 
-            $cartModel->getCart($userId); // получение всех продуктов корзины
-
-            $userProducts = $cartModel->getCart($userId);
+            $userProducts = $cartModel->getCart($userId); // получение всех продуктов корзины
 
             $products = [];
             foreach ($userProducts as $userProduct){

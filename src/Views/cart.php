@@ -10,13 +10,26 @@ foreach ($products as $product) {
 <head>
     <meta charset="UTF-8">
     <title>Корзина</title>
-
 </head>
 <body>
 
-<a href="/profile" class="profile-link">
-    👤 Мой профиль
-</a>
+<div class="top-bar">
+
+    <div class="left-buttons">
+        <a href="/profile" class="profile-link">
+            👤 Мой профиль
+        </a>
+
+        <a href="/catalog" class="cart-link">
+            Каталог
+        </a>
+    </div>
+
+    <a href="/logout" class="logout-link">
+        Выйти
+    </a>
+
+</div>
 
 <div class="catalog-container">
 
@@ -24,7 +37,6 @@ foreach ($products as $product) {
         Корзина
     </div>
 
-    <!-- таблица отдельно -->
     <div class="cart-table-container">
 
         <table class="cart-table">
@@ -37,54 +49,70 @@ foreach ($products as $product) {
                 <th>Цена</th>
                 <th>Количество</th>
                 <th>Сумма</th>
+                <th>Добавить</th>
             </tr>
             </thead>
 
             <tbody>
 
-            <?php if (!empty($products)): ?>
-
-                <?php foreach ($products as $product): ?>
-
-                    <tr>
-
-                        <td class="image-cell">
-                            <img src="<?= htmlspecialchars($product['image_url']) ?>">
-                        </td>
-
-                        <td class="name-cell">
-                            <?= htmlspecialchars($product['name']) ?>
-                        </td>
-
-                        <td class="description-cell">
-                            <?= htmlspecialchars($product['description']) ?>
-                        </td>
-
-                        <td class="price-cell">
-                            <?= number_format($product['price'], 0, '.', ' ') ?> ₽
-                        </td>
-
-                        <td class="amount-cell">
-                            <?= $product['amount'] ?>
-                        </td>
-
-                        <td class="total-cell">
-                            <?= number_format($product['totalPrice'], 0, '.', ' ') ?> ₽
-                        </td>
-
-                    </tr>
-
-                <?php endforeach; ?>
-
-            <?php else: ?>
+            <?php foreach ($products as $product): ?>
 
                 <tr>
-                    <td colspan="6" style="text-align:center; padding:40px;">
-                        Корзина пуста
+
+                    <td class="image-cell">
+                        <img src="<?= htmlspecialchars($product['image_url']) ?>">
                     </td>
+
+                    <td class="name-cell">
+                        <?= htmlspecialchars($product['name']) ?>
+                    </td>
+
+                    <td class="description-cell">
+                        <?= htmlspecialchars($product['description']) ?>
+                    </td>
+
+                    <td class="price-cell">
+                        <?= number_format($product['price'], 0, '.', ' ') ?> ₽
+                    </td>
+
+                    <td class="amount-cell">
+                        <?= $product['amount'] ?>
+                    </td>
+
+                    <td class="total-cell">
+                        <?= number_format($product['totalPrice'], 0, '.', ' ') ?> ₽
+                    </td>
+
+                    <td class="update-cell">
+
+                        <form action="update-cart" method="POST" class="update-form">
+
+                            <input type="hidden" name="product_id"
+                                   value="<?= $product['id'] ?>">
+
+                            <input type="number"
+                                   name="amount"
+                                   value="<?= $product['amount'] ?>"
+                                   min="1"
+                                   class="update-input">
+
+                            <button type="submit" class="update-btn">
+                                ✔
+                            </button>
+
+                        </form>
+                        <form action="/delete-product" method="POST">
+                            <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+                            <button type="submit" class="delete-btn" title="Удалить товар">
+                                ❌
+                            </button>
+                        </form>
+                    </td>
+
+
                 </tr>
 
-            <?php endif; ?>
+            <?php endforeach; ?>
 
             </tbody>
 
@@ -92,7 +120,6 @@ foreach ($products as $product) {
 
     </div>
 
-    <!-- общая сумма теперь полностью отдельно -->
     <div class="cart-summary-container">
 
         <div class="cart-total-box">
@@ -129,11 +156,27 @@ foreach ($products as $product) {
         padding: 30px 20px;
     }
 
-    .profile-link {
+    /* ===== TOP BAR ===== */
+
+    .top-bar {
+        max-width: 1200px;
+        margin: 0 auto 30px auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .left-buttons {
+        display: flex;
+        gap: 15px;
+    }
+
+    .profile-link,
+    .logout-link,
+    .cart-link {
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        margin-bottom: 30px;
         padding: 12px 24px;
         background: linear-gradient(135deg, #667eea, #764ba2);
         color: white;
@@ -141,7 +184,16 @@ foreach ($products as $product) {
         border-radius: 14px;
         font-weight: 500;
         box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+        transition: 0.2s;
     }
+
+    .profile-link:hover,
+    .logout-link:hover,
+    .cart-link:hover {
+        transform: translateY(-2px);
+    }
+
+    /* ===== CATALOG ===== */
 
     .catalog-container {
         max-width: 1200px;
@@ -157,7 +209,6 @@ foreach ($products as $product) {
         -webkit-text-fill-color: transparent;
     }
 
-    /* отдельный контейнер таблицы */
     .cart-table-container {
         background: white;
         border-radius: 20px;
@@ -165,7 +216,6 @@ foreach ($products as $product) {
         overflow: hidden;
     }
 
-    /* таблица */
     .cart-table {
         width: 100%;
         border-collapse: collapse;
@@ -220,15 +270,54 @@ foreach ($products as $product) {
         font-weight: 700;
         color: #e53e3e;
     }
+    .update-cell {
+        width: 200px;
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
 
-    /* отдельный контейнер общей суммы */
+    .update-cell form {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin: 0;
+    }
+
+    .update-input {
+        width: 85px;
+        height: 30px;
+        padding: 0 8px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .update-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        border: none;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .update-btn:hover {
+        transform: scale(1.08);
+    }
+
+     /* ===== TOTAL ===== */
+
     .cart-summary-container {
         display: flex;
         justify-content: flex-end;
         margin-top: 20px;
     }
 
-    /* отдельный блок */
     .cart-total-box {
         background: white;
         padding: 20px 30px;
@@ -248,5 +337,24 @@ foreach ($products as $product) {
         color: #4f46e5;
         margin-top: 5px;
     }
+    .delete-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        border: none;
+        background: #ef4444;
+        color: white;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
 
+    .delete-btn:hover {
+        background: #dc2626;
+        transform: scale(1.08);
+    }
+
+    .update-cell form + form {
+        margin-left: 4px;
+    }
 </style>

@@ -1,5 +1,12 @@
 <?php
 
+namespace Core;
+
+use Controller\CartController;
+use Controller\CatalogController;
+use Controller\LogoutController;
+use Controller\ProductController;
+use Controller\UserController;
 
 class App
 {
@@ -7,67 +14,86 @@ class App
     private array $routes = [
         '/registration' => [
             'GET' => [
-                'class' => 'UserController',
+                'class' => UserController::class,
                 'method' => 'getRegistrate'
             ],
             'POST' => [
-                'class' => 'UserController',
+                'class' => UserController::class,
                 'method' => 'registrate'
             ],
         ],
         '/login' => [
             'GET' => [
-                'class' => 'UserController',
+                'class' => UserController::class,
                 'method' => 'getLogin'
             ],
             'POST' => [
-                'class' => 'UserController',
+                'class' => UserController::class,
                 'method' => 'login'
             ],
         ],
         '/profile' => [
             'GET' => [
-                'class' => 'UserController',
+                'class' => UserController::class,
                 'method' => 'profile'
             ],
             'POST' => [
-                'class' => 'UserController',
+                'class' => UserController::class,
                 'method' => 'getProfile'
             ],
         ],
         '/profile-change' => [
             'GET' => [
-                'class' => 'UserController',
+                'class' => UserController::class,
                 'method' => 'getEditProfile'
             ],
             'POST' => [
-                'class' => 'UserController',
+                'class' => UserController::class,
                 'method' => 'editProfile'
             ],
         ],
         '/add-product' => [
             'GET' => [
-                'class' => 'ProductController',
+                'class' => ProductController::class,
                 'method' => 'getProduct'
             ],
             'POST' => [
-                'class' => 'ProductController',
+                'class' => ProductController::class,
                 'method' => 'addProduct'
             ],
         ],
         '/catalog' => [
             'GET' => [
-                'class' => 'CatalogController',
+                'class' => CatalogController::class,
                 'method' => 'getCatalog'
             ],
         ],
         '/cart' => [
             'GET' => [
-                'class' => 'CartController',
+                'class' => CartController::class,
                 'method' => 'getCart'
             ],
         ],
+        '/update-cart' => [
+            'POST' => [
+                'class' => ProductController::class,
+                'method' => 'changeProduct'
+            ],
+        ],
+        '/delete-product' => [
+            'POST' => [
+                'class' => ProductController::class,
+                'method' => 'deleteProduct'
+            ],
+        ],
+        '/logout' => [
+            'GET' => [
+                'class' => LogoutController::class,
+                'method' => 'logout'
+            ],
+        ],
     ];
+
 
     public function run()
     {
@@ -82,7 +108,7 @@ class App
                 $class = $handler['class'];
                 $method = $handler['method'];
 
-                require_once "../Controllers/$class.php";
+
                 $controller = new $class();
                 $controller->$method();
             } else {

@@ -1,12 +1,29 @@
-<!-- Кнопка профиля -->
-<a href="/profile" class="profile-link">
-    <i class="fas fa-user"></i>
-    Мой профиль
-</a>
-<a href="/cart" class="profile-link">
-    <i class="fas fa-user"></i>
-    Корзина
-</a>
+<?php
+$currentPage = $_SERVER['REQUEST_URI'] ?? '';
+?>
+
+<div class="top-bar">
+
+    <div class="left-buttons">
+        <a href="/profile"
+           class="nav-link <?= str_contains($currentPage, '/profile') ? 'active-link' : '' ?>">
+            👤 Мой профиль
+        </a>
+
+        <a href="/cart"
+           class="nav-link <?= str_contains($currentPage, '/cart') ? 'active-link' : '' ?>">
+            🛒 Корзина
+            <?php if (isset($cartCount) && $cartCount > 0): ?>
+                <span class="cart-badge"><?= $cartCount ?></span>
+            <?php endif; ?>
+        </a>
+    </div>
+
+    <a href="/logout" class="nav-link logout-link">
+         Выйти
+    </a>
+
+</div>
 
 <div class="catalog-container">
     <h1 class="catalog-title">Каталог товаров</h1>
@@ -32,8 +49,10 @@
                     <div class="product-price">
                         <?php echo $product['price']; ?> ₽
                     </div>
+
                 </div>
             </a>
+
             <form action="add-product" method="POST">
                 <div class="page-container">
 
@@ -44,13 +63,11 @@
                         </h1>
 
                         <div class="form-group">
-
                             <input
                                     type="hidden"
                                     name="product_id"
                                     id="product_id"
-                                    placeholder="Введите ID товара"
-                                    value = "<?php echo $product['id']; ?>"
+                                    value="<?php echo $product['id']; ?>"
                                     required
                             >
                         </div>
@@ -97,12 +114,26 @@
         padding: 30px 20px;
     }
 
-    /* Кнопка профиля */
-    .profile-link {
+    /* ===== TOP BAR ===== */
+
+    .top-bar {
+        max-width: 1200px;
+        margin: 0 auto 30px auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .left-buttons {
+        display: flex;
+        gap: 15px;
+    }
+
+    .nav-link {
+        position: relative;
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        margin-bottom: 30px;
         padding: 12px 24px;
         background: linear-gradient(135deg, #667eea, #764ba2);
         color: white;
@@ -113,12 +144,40 @@
         transition: 0.3s;
     }
 
-    .profile-link:hover {
+    .nav-link:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(102,126,234,0.4);
     }
 
-    /* Контейнер каталога */
+    .active-link {
+        box-shadow: 0 0 0 3px rgba(79,70,229,0.6);
+    }
+
+    .logout-link {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        box-shadow: 0 0 0 0 rgba(79,70,229,0.6);
+    }
+
+    .logout-link:hover {
+        box-shadow: 0 6px 20px rgba(102,126,234,0.4);
+    }
+
+    .cart-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: #ffffff;
+        color: #e53e3e;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 4px 7px;
+        border-radius: 50%;
+        min-width: 20px;
+        text-align: center;
+    }
+
+    /* ===== Каталог ===== */
+
     .catalog-container {
         max-width: 1200px;
         margin: 0 auto;
@@ -133,14 +192,12 @@
         -webkit-text-fill-color: transparent;
     }
 
-    /* Сетка товаров */
     .product-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
         gap: 30px;
     }
 
-    /* Карточка товара */
     .product-card {
         position: relative;
         background: white;
@@ -157,7 +214,6 @@
         box-shadow: 0 14px 40px rgba(0,0,0,0.18);
     }
 
-    /* Бейдж */
     .product-badge {
         position: absolute;
         top: 16px;
@@ -171,7 +227,6 @@
         z-index: 2;
     }
 
-    /* Картинка */
     .product-image {
         height: 220px;
         background: #f8fafc;
@@ -191,7 +246,6 @@
         transform: scale(1.05);
     }
 
-    /* Информация */
     .product-info {
         padding: 20px;
         display: flex;

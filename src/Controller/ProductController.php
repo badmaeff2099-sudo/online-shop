@@ -1,4 +1,7 @@
 <?php
+namespace Controller;
+use Model\Product;
+use PDO;
 
 class ProductController
 {
@@ -30,21 +33,21 @@ class ProductController
             $productId = $_POST['product_id'];
             $amount = $_POST['amount'];
 
-            require_once '../Model/Product.php';
+            // require_once '../Model/Product.php';
             $productModel = new Product();
             $data = $productModel->getByProductIdUserId($productId, $userId);
 
 
             if ($data === false) {
 
-                require_once '../Model/Product.php';
+               // require_once '../Model/Product.php';
                 $productModel = new Product();
                 $productModel->insertUserProduct($userId, $productId, $amount);
 
             } else {
 
                 $amount = $data['amount'] + $amount;
-                require_once '../Model/Product.php';
+              //  require_once '../Model/Product.php';
                 $productModel = new Product();
                 $productModel->updateUserProduct($amount, $userId, $productId);
 
@@ -64,7 +67,7 @@ header("Location: /catalog");
         if (isset($data['product_id'])) {
             $productId = (int)$data['product_id'];
 
-            require_once '../Model/Product.php';
+           // require_once '../Model/Product.php';
             $productModel = new Product();
             $dataId = $productModel->getByProductId($productId);
 
@@ -81,7 +84,7 @@ header("Location: /catalog");
 
             if ($amount <= 0) {
                 $errors['amount'] = 'Количество продукта не может равняться 0';
-            } elseif (strlen($amount) > 4) {
+            } elseif (strlen($amount) > 15) {
                 $errors['amount'] = 'некорректное число количества продукта';
             }
         } else {
@@ -89,6 +92,64 @@ header("Location: /catalog");
         }
 
         return $errors;
+    }
+
+    public function changeProduct()
+    {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+        if (!isset($_SESSION['userId'])) {
+            header("Location: /login");
+            exit;
+        }
+
+        $errors = $this->validate($_POST);
+
+        if (empty($errors)) {
+            $pdo = new PDO ('pgsql:host=postgres;port=5432;dbname=mydb', 'user', 'pwd');
+            $userId = $_SESSION['userId'];
+            $productId = $_POST['product_id'];
+            $amount = $_POST['amount'];
+
+           // require_once '../Model/Product.php';
+            $productModel = new Product();
+            $data = $productModel->getByProductIdUserId($productId, $userId);
+
+
+            $productModel = new Product();
+            $productModel->updateUserProduct($amount, $userId, $productId);
+
+        }
+        header("Location: /cart");
+    }
+
+    public function deleteProduct()
+    {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['userId'])) {
+            header("Location: /login");
+            exit;
+        }
+
+        if (!isset($_POST['product_id'])) {
+            header("Location: /cart");
+            exit;
+        }
+
+        $userId = $_SESSION['userId'];
+        $productId = $_POST['product_id'];
+
+       // require_once '../Model/Product.php';
+        $productModel = new Product();
+
+        $productModel->deleteUserProduct($userId, $productId);
+
+        header("Location: /cart");
+        exit;
     }
 
 }

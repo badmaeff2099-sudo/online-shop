@@ -1,4 +1,5 @@
 <?php
+namespace Model;
 
 require_once "../Model/Model.php";
 
@@ -31,4 +32,9 @@ public function getByProductId(int $productId)
     $result = $stmt->fetch();
     return $result;
 }
+    public function deleteUserProduct($userId, $productId)
+    {
+        $stmt = $this->PDO->prepare("DELETE FROM user_products WHERE user_id = :user_id AND product_id = :product_id");
+        $stmt->execute([':user_id' => $userId, ':product_id' => $productId]);
+    }
 }

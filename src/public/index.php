@@ -1,7 +1,18 @@
 <?php
 
-require_once '../Core/App.php';
+$autoload = function (string $className){
+    $path = "./../".str_replace('\\', '/', $className).".php";
 
-$app = new App();
+    if(file_exists($path)) {
+        require_once $path;
+        return true; // дальше можно не использовать else т.к. return
+    }
+    return false;
+};
+
+spl_autoload_register($autoload);
+
+
+$app = new Core\App();
 $app->run();
 
