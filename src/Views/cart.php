@@ -1,4 +1,5 @@
 <?php
+
 $cartTotal = 0;
 foreach ($products as $product) {
     $cartTotal += $product['totalPrice'];
@@ -12,7 +13,12 @@ foreach ($products as $product) {
     <title>Корзина</title>
 </head>
 <body>
-
+<?php if (!empty($_SESSION['success'])): ?>
+    <div id="toast" class="toast show">
+        <?= $_SESSION['success']; ?>
+    </div>
+    <?php unset($_SESSION['success']); ?>
+<?php endif; ?>
 <div class="top-bar">
 
     <div class="left-buttons">
@@ -135,9 +141,33 @@ foreach ($products as $product) {
         </div>
 
     </div>
+    <?php if (!empty($products)): ?>
+        <a href="/create-order" class="checkout-form">
+            <button type="button" class="checkout-btn">
+                Оформить заказ
+            </button>
+        </a>
+    <?php else: ?>
+        <div class="empty-cart-box">
+            <div class="empty-text">
+                🛒 Добавьте товары в корзину
+            </div>
 
+            <a href="/catalog" class="go-catalog-btn">
+                Перейти в каталог
+            </a>
+        </div>
+    <?php endif; ?>
 </div>
+<script>
+    const toast = document.getElementById('toast');
 
+    if (toast) {
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+</script>
 </body>
 </html>
 
@@ -356,5 +386,128 @@ foreach ($products as $product) {
 
     .update-cell form + form {
         margin-left: 4px;
+    }
+    .checkout-form {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 10px;
+        text-decoration: none;
+    }
+
+    .checkout-btn {
+        width: 260px;
+        padding: 20px;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: 0 4px 12px rgba(34,197,94,0.3);
+    }
+
+    .checkout-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(34,197,94,0.4);
+    }
+
+    .checkout-btn:active {
+        transform: scale(0.97);
+    }
+    /* ===== EMPTY CART ===== */
+
+    .empty-cart-box {
+        margin-top: 10px;
+        width: 260px;
+        padding: 18px;
+        border-radius: 12px;
+
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        color: #92400e;
+
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+
+        margin-left: auto;
+
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+
+        animation: fadeSlide 0.4s ease;
+    }
+
+    .empty-text {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    /* кнопка перехода */
+
+    .go-catalog-btn {
+        width: 100%;
+        padding: 10px;
+        text-align: center;
+
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+
+        transition: 0.2s;
+    }
+
+    .go-catalog-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px rgba(102,126,234,0.3);
+    }
+
+    /* анимация */
+
+    @keyframes fadeSlide {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    /* ===== TOAST ===== */
+
+    .toast {
+        position: fixed;
+
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-20px);
+
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        color: white;
+
+        padding: 14px 24px;
+        border-radius: 12px;
+
+        font-size: 14px;
+        font-weight: 600;
+        text-align: center;
+
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+
+        opacity: 0;
+        transition: 0.3s ease;
+
+        z-index: 9999;
+    }
+
+    .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
     }
 </style>

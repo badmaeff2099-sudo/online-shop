@@ -7,7 +7,7 @@ use PDO;
 
 class Cart extends Model
 {
-    public function getCart($userId)
+    public function getAllProductsByUserId(int $userId): array
     {
         $stmt = $this->PDO->prepare("SELECT * FROM user_products WHERE user_id = :userId ORDER BY product_id ASC");
 
@@ -16,12 +16,18 @@ class Cart extends Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getProductsByProductId($productId)
+    public function getProductsByProductId(int $productId): array
     {
         $stmt = $this->PDO->prepare("SELECT * FROM products WHERE id = :productId");
 
         $stmt->execute(['productId' => $productId]);
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function deleteByUserId(int $userId)
+    {
+         $stmt = $this->PDO->prepare("DELETE FROM user_products WHERE user_id = :userId");
+         $stmt->execute(['userId' => $userId]);
     }
 }

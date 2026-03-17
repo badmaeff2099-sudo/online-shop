@@ -5,6 +5,7 @@ namespace Core;
 use Controller\CartController;
 use Controller\CatalogController;
 use Controller\LogoutController;
+use Controller\OrderController;
 use Controller\ProductController;
 use Controller\UserController;
 
@@ -90,6 +91,16 @@ class App
             'GET' => [
                 'class' => LogoutController::class,
                 'method' => 'logout'
+            ],
+        ],
+        '/create-order' => [
+            'GET' => [
+                'class' => OrderController::class,
+                'method' => 'getCheckoutForm'
+            ],
+            'POST' => [
+                'class' => OrderController::class,
+                'method' => 'handleCheckout'
             ],
         ],
     ];

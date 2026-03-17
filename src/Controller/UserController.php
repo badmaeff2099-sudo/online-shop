@@ -11,7 +11,7 @@ class UserController
     {
         $this->userModel = new User();
     }
-    public function getRegistrate()
+    public function getRegistrate(): void
     {
         session_start();
         if (isset($_SESSION['userId'])) {
@@ -20,11 +20,11 @@ class UserController
         require_once '../Views/registration_form.php';
     }
 
-    public function registrate()
+    public function registrate(): void
     {
         $errors = $this->validate($_POST);
-        // внесение в БД, если нет ошибок
 
+        // внесение в БД, если нет ошибок
         if (empty($errors)) {
             $name = $_POST['name'];
             $email = $_POST['email'];
@@ -32,13 +32,11 @@ class UserController
             $passwordRep = $_POST['psw-rep'];
             $password = password_hash($password, PASSWORD_DEFAULT);
 
-         
-            $user = $this->userModel->insertUsers($name, $email, $password); // добавление пользователя
+            $this->userModel->insertUsers($name, $email, $password); // добавление пользователя
 
+          //  $result = $this->userModel->getByEmail($email);// для вывода данных зарегистрированного пользователя на экран
 
-            $result = $this->userModel->getByEmail($email);// для вывода данных зарегистрированного пользователя на экран
-
-            print_r($result);
+           // print_r($result);
         }
 
         require_once '../Views/registration_form.php';
@@ -50,50 +48,45 @@ class UserController
     {
         $errors = [];
 
-        // объявление и валидация данных
-
-        if (isset($data['name'])) {
-            $name = $data['name'];
-            if (strlen($name) < 2) {
-                $errors['name'] = "Имя должно быть больше 2 символов";
-            }
-        } else {
+        // --- NAME ---
+        $name = trim($data['name'] ?? '');
+        if ($name === '') {
             $errors['name'] = "Имя должно быть заполнено";
+        } elseif (mb_strlen($name) < 2) {
+            $errors['name'] = "Имя должно быть больше 2 символов";
         }
 
-        if (isset($data['email'])) {
-            $email = $data['email'];
-            if (strlen($email) < 2) {
-                $errors['email'] = "Почта должна быть больше 2 символов";
-            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errors['email'] = "email некорректный";
-            } else {
-                // соединение с БД
-             
-                $user = $this->userModel->getByEmail($email);
-                if ($user !== false) {
-                    $errors['email'] = "Этот Email уже зарегистрирован";
-                }
-            }
-        } else {
+        // --- EMAIL ---
+        $email = trim($data['email'] ?? '');
+        if ($email === '') {
             $errors['email'] = "Почта должна быть заполнена";
-        }
-
-        //  проверка совпадения паролей
-
-        if (isset($data['psw'])) {
-            $password = $data['psw'];
-            if (strlen($password) < 2) {
-                $errors['psw'] = 'пароль должен быть больше 2';
-            }
-            $passwordRep = $data["psw-rep"];
-            if ($password !== $passwordRep) {
-                $errors['psw-rep'] = 'пароли не совпадают';
-            }
+        } elseif (mb_strlen($email) < 2) {
+            $errors['email'] = "Почта должна быть больше 2 символов";
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = "Email некорректный";
         } else {
-            $errors['psw'] = 'Пароль должен быть заполнен';
+            $user = $this->userModel->getByEmail($email);
+            if ($user !== false) {
+                $errors['email'] = "Этот Email уже зарегистрирован";
+            }
         }
 
+        // --- PASSWORD ---
+        $password = $data['psw'] ?? '';
+        $passwordRep = $data['psw-rep'] ?? '';
+
+        if ($password === '') {
+            $errors['psw'] = "Пароль должен быть заполнен";
+        } elseif (mb_strlen($password) < 2) {
+            $errors['psw'] = "Пароль должен быть больше 2 символов";
+        } else {
+            // проверяем повторный пароль только если основной пароль корректный
+            if ($passwordRep === '') {
+                $errors['psw-rep'] = "Повторный пароль должен быть заполнен";
+            } elseif ($password !== $passwordRep) {
+                $errors['psw-rep'] = "Пароли не совпадают";
+            }
+        }
 
         return $errors;
     }
@@ -117,7 +110,7 @@ class UserController
           //  require_once '../Model/User.php';
          //   $userModel = new User();
 
-            $user = $this->userModel->getById($userId); // getById
+            $user = $this->userModel->getByUserId($userId); // getById
 
             require_once '../Views/profile_page.php';
         } else {
@@ -224,7 +217,7 @@ class UserController
             $stmt = $pdo->query("SELECT * FROM users WHERE id =" . $userId);
             $user = $stmt->fetch(); */
 
-            $user = $this->userModel->getById($userId); // getById
+            $user = $this->userModel->getByUserId($userId); // getById
 
             if ($user['name'] !== $name) {
                $this->userModel->updateNameById($name, $userId);

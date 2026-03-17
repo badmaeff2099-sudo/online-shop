@@ -17,7 +17,7 @@ class CartController
 
             $userId = $_SESSION['userId'];
 
-            $userProducts = $cartModel->getCart($userId); // получение всех продуктов корзины
+            $userProducts = $cartModel->getAllProductsByUserId($userId); // получение всех продуктов корзины
 
             $products = [];
             foreach ($userProducts as $userProduct){
