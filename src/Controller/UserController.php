@@ -110,7 +110,7 @@ class UserController
           //  require_once '../Model/User.php';
          //   $userModel = new User();
 
-            $user = $this->userModel->getByUserId($userId); // getById
+            $user = $this->userModel->getByUserId($userId);
 
             require_once '../Views/profile_page.php';
         } else {
@@ -168,13 +168,18 @@ class UserController
     private function validateLogin(array $data): array
     {
         $errors = [];
-        if (!isset($data['username'])) {
-            $errors['username'] = "Поле Username обязательно для заполнения!";
+
+        $username = trim($data['username'] ?? '');
+        $password = trim($data['password'] ?? '');
+
+        if ($username === '') {
+            $errors['username'] = "Введите Username";
         }
 
-        if (!isset($data['password'])) {
-            $errors['password'] = "Поле Password обязательно для заполнения!";
+        if ($password === '') {
+            $errors['password'] = "Введите Password";
         }
+
         return $errors;
     }
 

@@ -1,7 +1,8 @@
 <?php
 
 namespace Model;
-class Order extends Model{
+class Order extends Model
+{
 
     public function create(string $contactName, string $contactPhone, string $comment, string $address, int $userId)
     {
@@ -20,6 +21,13 @@ class Order extends Model{
 
         $data = $stmt->fetch();
         return $data['id'];
+    }
+
+    public function getAllByUserId($userId): array
+    {
+        $stmt = $this->PDO->prepare("SELECT * FROM orders WHERE user_id = :userId");
+        $stmt->execute(['userId' => $userId]);
+        return $stmt->fetchAll();
     }
 }
 

@@ -5,9 +5,137 @@ namespace Controller;
 use Model\Cart;
 use Model\Order;
 use Model\OrderProduct;
+use Model\Product;
+
 
 class OrderController
 {
+    private Cart $cartModel;
+    private Order $orderModel;
+    private OrderProduct $orderProductModel;
+    private Product $productModel;
+
+    public function __construct()
+    {
+        $this->cartModel = new Cart();
+        $this->orderModel = new Order();
+        $this->orderProductModel = new OrderProduct();
+        $this->productModel = new Product();
+    }
+
+    public function getAllOrders()
+    {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['userId'])) {
+            header("Location: /login");
+            exit;
+        }
+
+        $userId = $_SESSION['userId'];
+
+
+        $userOrders = $this->orderModel->getAllByUserId($userId);
+
+//        $userOrders = [
+//           [
+//            'id' => 1,
+//            'user_id' => 1,
+//            'contact_name' => 'test',
+//            'contact_phone' => '12345',
+//            'comment' => null
+//           ],
+//           [
+//            'id' => 2,
+//            'user_id' => 1,
+//            'contact_name' => 'test',
+//            'contact_phone' => '12345',
+//            'comment' => null
+//           ]
+//        ];
+
+
+        $newUserOrders = [];
+        foreach ($userOrders as $userOrder) {
+
+//          $userOrder = [
+////          'id' => 1,
+//            'user_id' => 1,
+//            'contact_name' => 'test',
+//            'contact_phone' => '12345',
+//            'comment' => null
+//           ];
+
+
+            $orderProducts = $this->orderProductModel->getAllByOrderId($userOrder['id']);
+
+//            $orderProducts = [
+//              [
+////                'id'=>1,
+////                'order_id' => 1,
+////                'product_id' => 10.
+////                'amount' => 100,
+////            ],
+//              [
+////                'id'=>2,
+////                'order_id' => 2,
+////                'product_id' => 11.
+////                'amount' => 200,
+////            ],
+////          ];
+
+            $newOrderProducts = [];
+            $sum = 0;
+
+            foreach ($orderProducts as $orderProduct) {
+
+//            $orderProduct = [
+//                'id'=>1,
+//                'order_id' => 1,
+//                'product_id' => 10.
+//                'amount' => 100,
+//            ]
+
+                $product = $this->productModel->getOneById($orderProduct['product_id']);
+
+//            $product = [
+////                'id'=>10,
+////                'name' => Macbook,
+////                'price' => 256000.
+////                'image_url' => https/.,
+////            ]
+
+
+                $orderProduct['name'] = $product['name'];
+                $orderProduct['price'] = $product['price'];
+                $orderProduct['totalSumOneProduct'] = $orderProduct['amount'] * $orderProduct['price'];
+
+///             $orderProduct = [
+////                'id'=>1,
+////                'order_id' => 1,
+////                'product_id' => 10.
+////                'amount' => 100,
+///                 'name' => Macbook,
+////                'price' => 256000.
+///                 'totalSumOneProduct' => $orderProduct['amount] * $product['price],
+////            ]
+
+                $newOrderProducts[] = $orderProduct;
+                $sum = $sum + $orderProduct['totalSumOneProduct'];
+            }
+
+            $userOrder['total'] = $sum;
+            $userOrder['products'] = $newOrderProducts;
+
+            $newUserOrders[] = $userOrder;
+            //  return $newOrderProducts;
+        }
+
+        require_once '../Views/user_orders.php';
+    }
+
 
     public function getCheckoutForm(): void
     {
@@ -29,11 +157,11 @@ class OrderController
 
         if (empty($errors)) {
 
-            $contactName  = $cleanData['contact_name'];
+            $contactName = $cleanData['contact_name'];
             $contactPhone = $cleanData['contact_phone'];
-            $comment      = $cleanData['comment'];
-            $address      = $cleanData['address'];
-            $userId       = $_SESSION['userId'];
+            $comment = $cleanData['comment'];
+            $address = $cleanData['address'];
+            $userId = $_SESSION['userId'];
 
             $orderModel = new Order();
             $orderId = $orderModel->create(
@@ -71,7 +199,7 @@ class OrderController
     private function validate(array $data): array
     {
         $errors = [];
-        $clean  = [];
+        $clean = [];
 
         // --- NAME ---
         $name = trim($data['contact_name'] ?? '');
@@ -139,4 +267,5 @@ class OrderController
 
         return [$errors, $clean];
     }
+
 }

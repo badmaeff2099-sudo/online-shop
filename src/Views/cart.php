@@ -29,6 +29,10 @@ foreach ($products as $product) {
         <a href="/catalog" class="cart-link">
             Каталог
         </a>
+
+        <a href="/user-orders" class="cart-link">
+            Мои заказы
+        </a>
     </div>
 
     <a href="/logout" class="logout-link">

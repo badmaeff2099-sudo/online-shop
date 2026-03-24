@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+    <html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>Оформление заказа</title>
+    </head>
+    <body>
+
+    <a href="/catalog">Каталог продуктов</a>
+    <h1>Мои заказы</h1>
+
+    <div class="order-container">
+        <?php foreach ($newUserOrders as $newUserOrder): ?>
+        <div class = "order-card">
+            <h2>Заказ № <?php echo $newUserOrder['id']; ?></h2>
+            <p><?php echo $newUserOrder['contact_name']; ?></p>
+            <p><?php echo $newUserOrder['contact_phone']; ?></p>
+            <p><?php echo $newUserOrder['comment']; ?></p>
+            <p><?php echo $newUserOrder['address']; ?></p>
+            <table>
+                <thead>
+                <tr>
+                    <th>Наименование</th>
+                    <th>Количество</th>
+                    <th>Стоимость</th>
+                    <th>Сумма</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($newUserOrder['products'] as $newOrderProduct): ?>
+                <tr>
+                    <td><?php echo $newOrderProduct['name']; ?></td>
+                    <td><?php echo $newOrderProduct['amount']; ?></td>
+                    <td><?php echo $newOrderProduct['price']; ?></td>
+                    <td><?php echo $newOrderProduct['totalSumOneProduct']; ?></td>
+                </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+
+            <p>Сумма заказа: <?php echo $newUserOrder['total']; ?></p>
+        </div>
+        <?php endforeach; ?>
+    </div>
+
+    </body>
+    </html>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+    }
+
+    body {
+        background: #f7f7f7;
+        color: #111;
+        padding: 30px;
+    }
+
+    /* Ссылка назад */
+    a {
+        display: inline-block;
+        margin-bottom: 20px;
+        text-decoration: none;
+        color: #000;
+        font-weight: bold;
+        border-bottom: 1px solid transparent;
+        transition: 0.3s;
+    }
+
+    a:hover {
+        border-color: #000;
+    }
+
+    /* Заголовок */
+    h1 {
+        margin-bottom: 30px;
+        font-size: 28px;
+    }
+
+    /* Контейнер заказов */
+    .order-container {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    /* Карточка заказа */
+    .order-card {
+        background: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        transition: 0.3s;
+    }
+
+    .order-card:hover {
+        transform: translateY(-3px);
+    }
+
+    /* Заголовок заказа */
+    .order-card h2 {
+        margin-bottom: 15px;
+        font-size: 20px;
+    }
+
+    /* Инфо */
+    .order-card p {
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: #444;
+    }
+
+    /* Таблица */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    /* Заголовки таблицы */
+    th {
+        text-align: left;
+        font-size: 13px;
+        color: #777;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #eee;
+    }
+
+    /* Ячейки */
+    td {
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 14px;
+    }
+
+    /* Итог */
+    .order-card p:last-child {
+        margin-top: 10px;
+        font-weight: bold;
+        color: #000;
+    }
+
+    /* Адаптив */
+    @media (max-width: 600px) {
+        body {
+            padding: 15px;
+        }
+
+        .order-card {
+            padding: 15px;
+        }
+
+        h1 {
+            font-size: 22px;
+        }
+    }
+</style>

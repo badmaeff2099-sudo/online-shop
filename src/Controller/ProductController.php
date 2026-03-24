@@ -69,7 +69,7 @@ header("Location: /catalog");
 
            // require_once '../Model/Product.php';
             $productModel = new Product();
-            $dataId = $productModel->getByProductId($productId);
+            $dataId = $productModel->getOneById($productId);
 
             if ($dataId === false) {
 
