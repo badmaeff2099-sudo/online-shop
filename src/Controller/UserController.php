@@ -143,13 +143,13 @@ class UserController
             $user = $this->userModel->getByEmail($username);
 
             if (!empty($user)) {
-                $passwordDb = $user['password'];
+                $passwordDb = $user->getPassword();
 
                 if (password_verify($password, $passwordDb)) {
 
                     // успешный вход через сессии
                     session_start();
-                    $_SESSION['userId'] = $user['id'];
+                    $_SESSION['userId'] = $user->getId();
 
                     header("Location: /catalog");
 
@@ -224,12 +224,12 @@ class UserController
 
             $user = $this->userModel->getByUserId($userId); // getById
 
-            if ($user['name'] !== $name) {
+            if ($user->getName() !== $name) {
                $this->userModel->updateNameById($name, $userId);
 
             }
 
-            if ($user['email'] !== $email) {
+            if ($user->getEmail() !== $email) {
                 $this->userModel->updateEmailById($email, $userId);
             }
             header("Location: /profile");
@@ -267,7 +267,7 @@ class UserController
                 $user = $this->userModel->getByEmail($email);
 
                 $userId = $_SESSION['userId'];
-                if ($user && $user['id'] !== $userId) {
+                if ($user && $user->getId() !== $userId) {
                     $errors['email'] = "Этот Email уже зарегистрирован!";
                 }
             }

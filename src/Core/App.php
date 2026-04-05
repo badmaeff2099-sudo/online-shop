@@ -14,7 +14,6 @@ class App
 
     private array $routes = [];
 
-
     public function run()
     {
         $requestUri = $_SERVER['REQUEST_URI'];
@@ -28,7 +27,6 @@ class App
                 $class = $handler['class'];
                 $method = $handler['method'];
 
-
                 $controller = new $class();
                 $controller->$method();
             } else {
@@ -37,7 +35,6 @@ class App
         }else{
             http_response_code(404);
             require_once '../Views/404.php';
-
         }
     }
 

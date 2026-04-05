@@ -1,10 +1,21 @@
 <?php
 namespace Controller;
 use Model\Product;
+use Model\UserProduct;
 use PDO;
 
 class ProductController
 {
+
+    private Product $productModel;
+
+    private UserProduct $userProductModel;
+
+    public function __construct()
+    {
+        $this->productModel = new Product();
+        $this->userProductModel = new UserProduct();
+    }
     public function getProduct()
     {
         session_start();
@@ -33,23 +44,18 @@ class ProductController
             $productId = $_POST['product_id'];
             $amount = $_POST['amount'];
 
-            // require_once '../Model/Product.php';
-            $productModel = new Product();
-            $data = $productModel->getByProductIdUserId($productId, $userId);
 
+            $data = $this->userProductModel->getByProductIdUserId($productId, $userId);
 
             if ($data === false) {
 
-               // require_once '../Model/Product.php';
-                $productModel = new Product();
-                $productModel->insertUserProduct($userId, $productId, $amount);
+                $this->userProductModel->insertUserProduct($userId, $productId, $amount);
 
             } else {
 
                 $amount = $data['amount'] + $amount;
-              //  require_once '../Model/Product.php';
-                $productModel = new Product();
-                $productModel->updateUserProduct($amount, $userId, $productId);
+
+                $this->userProductModel->updateUserProduct($amount, $userId, $productId);
 
             }
 
@@ -67,9 +73,7 @@ header("Location: /catalog");
         if (isset($data['product_id'])) {
             $productId = (int)$data['product_id'];
 
-           // require_once '../Model/Product.php';
-            $productModel = new Product();
-            $dataId = $productModel->getOneById($productId);
+             $dataId = $this->productModel->getOneById($productId);
 
             if ($dataId === false) {
 
@@ -112,13 +116,10 @@ header("Location: /catalog");
             $productId = $_POST['product_id'];
             $amount = $_POST['amount'];
 
-           // require_once '../Model/Product.php';
-            $productModel = new Product();
-            $data = $productModel->getByProductIdUserId($productId, $userId);
+            $data = $this->userProductModel->getByProductIdUserId($productId, $userId);
 
 
-            $productModel = new Product();
-            $productModel->updateUserProduct($amount, $userId, $productId);
+            $this->userProductModel->updateUserProduct($amount, $userId, $productId);
 
         }
         header("Location: /cart");
@@ -143,10 +144,7 @@ header("Location: /catalog");
         $userId = $_SESSION['userId'];
         $productId = $_POST['product_id'];
 
-       // require_once '../Model/Product.php';
-        $productModel = new Product();
-
-        $productModel->deleteUserProduct($userId, $productId);
+        $this->userProductModel->deleteUserProduct($userId, $productId);
 
         header("Location: /cart");
         exit;

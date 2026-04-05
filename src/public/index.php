@@ -44,7 +44,7 @@ $app->addRoute('/update-cart','POST', ProductController::class, 'changeProduct')
 
 $app->addRoute('/delete-product','POST', ProductController::class, 'deleteProduct');
 
-$app->addRoute('/logout','POST', LogoutController::class, 'logout');
+$app->addRoute('/logout','GET', LogoutController::class, 'logout');
 
 $app->addRoute('/create-order','GET', OrderController::class, 'getCheckoutForm');
 $app->addRoute('/create-order','POST', OrderController::class, 'handleCheckout');

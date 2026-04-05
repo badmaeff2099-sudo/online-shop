@@ -1,9 +1,23 @@
 <?php
 namespace Controller;
-use Model\Cart;
+
+use Model\UserProduct;
+use Model\Product;
+
 
 class CartController
 {
+
+    private Product $productModel;
+    private UserProduct $userProductModel;
+
+
+    public function __construct()
+    {
+        $this->productModel = new Product();
+        $this->userProductModel = new UserProduct();
+
+    }
 
     public function getCart()
     {
@@ -12,18 +26,17 @@ class CartController
 
         if (isset($_SESSION['userId'])) {
 
-           // require_once '../Model/Cart.php';
-            $cartModel = new Cart();
+
 
             $userId = $_SESSION['userId'];
 
-            $userProducts = $cartModel->getAllProductsByUserId($userId); // получение всех продуктов корзины
+            $userProducts = $this->userProductModel->getAllProductsByUserId($userId); // получение всех продуктов корзины
 
             $products = [];
             foreach ($userProducts as $userProduct){
                 $productId = $userProduct['product_id'];
 
-                $product = $cartModel->getProductsByProductId($productId);
+                $product = $this->productModel->getProductsByProductId($productId);
 
                 $product['amount'] = $userProduct['amount'];
 

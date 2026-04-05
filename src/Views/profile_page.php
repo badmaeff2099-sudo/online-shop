@@ -35,7 +35,7 @@
                             <i class="fas fa-user-circle"></i>
                             <span>Имя:</span>
                         </div>
-                        <div class="info-value"><?php echo $user['name']; ?></div>
+                        <div class="info-value"><?php echo $user->getName(); ?></div>
                     </div>
 
                     <div class="info-row">
@@ -43,7 +43,7 @@
                             <i class="fas fa-envelope"></i>
                             <span>Email:</span>
                         </div>
-                        <div class="info-value"><?php echo $user['email']; ?> </div>
+                        <div class="info-value"><?php echo $user->getEmail(); ?> </div>
                     </div>
 
                     <div class="info-row">

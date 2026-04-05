@@ -5,14 +5,31 @@ namespace Model;
 require_once "../Model/Model.php";
 class User extends Model
 {
+    private int $id;
+    private string $name;
+    private string $email;
+    private string $password;
 
- public function getByEmail(string $email): array|false
+    private function mapToUser(array $userData): self
+    {
+        $obj = new self();
+        $obj->id = $userData['id'];
+        $obj->name = $userData['name'];
+        $obj->email = $userData['email'];
+        $obj->password = $userData['password'];
+
+        return $obj;
+    }
+
+ public function getByEmail(string $email): self|null
  {
      $stmt = $this->PDO->prepare("SELECT * FROM users WHERE email = :email");
      $stmt->execute(['email' => $email]);
-
-     return $stmt->fetch();
-
+     $user = $stmt->fetch();
+     if($user === false){
+         return null;
+     }
+     return $this->mapToUser($user);
  }
  public function updateEmailById(string $email, int $userId): void
  {
@@ -35,11 +52,38 @@ class User extends Model
      $stmt->execute(['name' => $name, 'email' => $email, 'password' => $password]); #здесь под капотом выполняется метод экранирования против sql инъекции, поэтому метод ниже можно убрать или закомментировать
  }
 
- public function getByUserId(int $userId): array
+ public function getByUserId(int $userId): self|null
  {
-     $stmt = $this->PDO->query('SELECT * FROM users WHERE id = ' . $userId);
-     return $stmt->fetch();
+     $stmt = $this->PDO->prepare("SELECT * FROM users WHERE id = :id");
+     $stmt->execute(['id' => $userId]);
+     $user = $stmt->fetch();
 
+     if($user === false){
+         return null;
+     }
+
+     return $this->mapToUser($user);
  }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
 }
 

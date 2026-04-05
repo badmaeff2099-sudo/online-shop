@@ -2,7 +2,7 @@
 
 namespace Controller;
 
-use Model\Cart;
+use Model\UserProduct;
 use Model\Order;
 use Model\OrderProduct;
 use Model\Product;
@@ -10,14 +10,14 @@ use Model\Product;
 
 class OrderController
 {
-    private Cart $cartModel;
+    private UserProduct $cartModel;
     private Order $orderModel;
     private OrderProduct $orderProductModel;
     private Product $productModel;
 
     public function __construct()
     {
-        $this->cartModel = new Cart();
+        $this->cartModel = new UserProduct();
         $this->orderModel = new Order();
         $this->orderProductModel = new OrderProduct();
         $this->productModel = new Product();
@@ -108,8 +108,8 @@ class OrderController
 ////            ]
 
 
-                $orderProduct['name'] = $product['name'];
-                $orderProduct['price'] = $product['price'];
+                $orderProduct['name'] = $product->getName();
+                $orderProduct['price'] = $product->getPrice();
                 $orderProduct['totalSumOneProduct'] = $orderProduct['amount'] * $orderProduct['price'];
 
 ///             $orderProduct = [
@@ -172,7 +172,7 @@ class OrderController
                 $userId
             );
 
-            $cartModel = new Cart();
+            $cartModel = new UserProduct();
             $userProducts = $cartModel->getAllProductsByUserId($userId);
 
             $orderProduct = new OrderProduct();
