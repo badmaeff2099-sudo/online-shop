@@ -57,12 +57,15 @@ class Product extends Model
     // 🔹 универсальный маппер
     private function mapToProduct(array $productData): self
     {
+
+
         $obj = new self();
         $obj->id = $productData['id'];
         $obj->name = $productData['name'];
         $obj->description = $productData['description'];
         $obj->price = $productData['price'];
         $obj->image_url = $productData['image_url'];
+
 
         return $obj;
     }
@@ -90,7 +93,15 @@ class Product extends Model
     {
         // если пользователь найден, выдаем каталог
         $stmt = $this->PDO->query('SELECT * FROM products');
-        return $stmt->fetchAll();
+        $results =  $stmt->fetchAll();
+
+        $products = [];
+
+        foreach ($results as $result) {
+            $products[] = $this->mapToProduct($result);
+        }
+
+        return $products;
     }
 
     public function getProductsByProductId(int $productId): array
@@ -125,3 +136,4 @@ class Product extends Model
         return $this->image_url;
     }
 }
+

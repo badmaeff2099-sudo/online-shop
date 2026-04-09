@@ -47,13 +47,13 @@ class ProductController
 
             $data = $this->userProductModel->getByProductIdUserId($productId, $userId);
 
-            if ($data === false) {
+            if ($data === null) {
 
                 $this->userProductModel->insertUserProduct($userId, $productId, $amount);
 
             } else {
 
-                $amount = $data['amount'] + $amount;
+                $amount = $data->getAmount() + $amount;
 
                 $this->userProductModel->updateUserProduct($amount, $userId, $productId);
 

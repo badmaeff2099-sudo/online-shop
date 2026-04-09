@@ -29,15 +29,15 @@
             <div class="order-card">
 
                 <div class="order-header">
-                    <h2>Заказ № <?= $newUserOrder['id']; ?></h2>
+                    <h2>Заказ № <?= $newUserOrder['order']->getId() ?></h2>
 
                 </div>
 
                 <div class="order-info">
-                    <p><strong>Имя:</strong> <?= $newUserOrder['contact_name']; ?></p>
-                    <p><strong>Телефон:</strong> <?= $newUserOrder['contact_phone']; ?></p>
-                    <p><strong>Адрес:</strong> <?= $newUserOrder['address']; ?></p>
-                    <p><strong>Комментарий:</strong> <?= $newUserOrder['comment']; ?></p>
+                    <p><strong>Имя:</strong> <?= $newUserOrder['order']->getContactName(); ?></p>
+                    <p><strong>Телефон:</strong> <?= $newUserOrder['order']->getContactPhone(); ?></p>
+                    <p><strong>Адрес:</strong> <?= $newUserOrder['order']->getAddress(); ?></p>
+                    <p><strong>Комментарий:</strong> <?= $newUserOrder['order']->getComment(); ?></p>
                 </div>
 
                 <div class="table-container">

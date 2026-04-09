@@ -20,9 +20,9 @@ class CatalogController
         if (isset($_SESSION['userId'])) {
 
 
-            $this->productModel->getCatalog(); // получение каталога всех продуктов
+            $products = $this->productModel->getCatalog(); // получение каталога всех продуктов
 
-            $products = $this->productModel->getCatalog();
+
             require_once '../Views/catalog_page.php';
         } else {
 

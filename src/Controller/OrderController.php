@@ -36,101 +36,45 @@ class OrderController
 
         $userId = $_SESSION['userId'];
 
-
         $userOrders = $this->orderModel->getAllByUserId($userId);
 
-//        $userOrders = [
-//           [
-//            'id' => 1,
-//            'user_id' => 1,
-//            'contact_name' => 'test',
-//            'contact_phone' => '12345',
-//            'comment' => null
-//           ],
-//           [
-//            'id' => 2,
-//            'user_id' => 1,
-//            'contact_name' => 'test',
-//            'contact_phone' => '12345',
-//            'comment' => null
-//           ]
-//        ];
-
-
         $newUserOrders = [];
+
         foreach ($userOrders as $userOrder) {
 
-//          $userOrder = [
-////          'id' => 1,
-//            'user_id' => 1,
-//            'contact_name' => 'test',
-//            'contact_phone' => '12345',
-//            'comment' => null
-//           ];
-
-
-            $orderProducts = $this->orderProductModel->getAllByOrderId($userOrder['id']);
-
-//            $orderProducts = [
-//              [
-////                'id'=>1,
-////                'order_id' => 1,
-////                'product_id' => 10.
-////                'amount' => 100,
-////            ],
-//              [
-////                'id'=>2,
-////                'order_id' => 2,
-////                'product_id' => 11.
-////                'amount' => 200,
-////            ],
-////          ];
+            $orderProducts = $this->orderProductModel->getAllByOrderId($userOrder->getId());
 
             $newOrderProducts = [];
             $sum = 0;
 
             foreach ($orderProducts as $orderProduct) {
 
-//            $orderProduct = [
-//                'id'=>1,
-//                'order_id' => 1,
-//                'product_id' => 10.
-//                'amount' => 100,
-//            ]
+                $product = $this->productModel->getOneById($orderProduct->getProductId());
 
-                $product = $this->productModel->getOneById($orderProduct['product_id']);
+                // если товар не найден — пропускаем
+                if ($product === null) {
+                    continue;
+                }
 
-//            $product = [
-////                'id'=>10,
-////                'name' => Macbook,
-////                'price' => 256000.
-////                'image_url' => https/.,
-////            ]
+                $totalOne = $orderProduct->getAmount() * $product->getPrice();
 
+                $newOrderProducts[] = [
+                    'id' => $orderProduct->getId(),
+                    'product_id' => $orderProduct->getProductId(),
+                    'amount' => $orderProduct->getAmount(),
+                    'name' => $product->getName(),
+                    'price' => $product->getPrice(),
+                    'totalSumOneProduct' => $totalOne
+                ];
 
-                $orderProduct['name'] = $product->getName();
-                $orderProduct['price'] = $product->getPrice();
-                $orderProduct['totalSumOneProduct'] = $orderProduct['amount'] * $orderProduct['price'];
-
-///             $orderProduct = [
-////                'id'=>1,
-////                'order_id' => 1,
-////                'product_id' => 10.
-////                'amount' => 100,
-///                 'name' => Macbook,
-////                'price' => 256000.
-///                 'totalSumOneProduct' => $orderProduct['amount] * $product['price],
-////            ]
-
-                $newOrderProducts[] = $orderProduct;
-                $sum = $sum + $orderProduct['totalSumOneProduct'];
+                $sum += $totalOne;
             }
 
-            $userOrder['total'] = $sum;
-            $userOrder['products'] = $newOrderProducts;
-
-            $newUserOrders[] = $userOrder;
-            //  return $newOrderProducts;
+            $newUserOrders[] = [
+                'order' => $userOrder,
+                'total' => $sum,
+                'products' => $newOrderProducts
+            ];
         }
 
         require_once '../Views/user_orders.php';
@@ -164,13 +108,7 @@ class OrderController
             $userId = $_SESSION['userId'];
 
             $orderModel = new Order();
-            $orderId = $orderModel->create(
-                $contactName,
-                $contactPhone,
-                $comment,
-                $address,
-                $userId
-            );
+            $orderId = $orderModel->create($contactName, $contactPhone, $comment, $address, $userId);
 
             $cartModel = new UserProduct();
             $userProducts = $cartModel->getAllProductsByUserId($userId);
@@ -178,11 +116,7 @@ class OrderController
             $orderProduct = new OrderProduct();
 
             foreach ($userProducts as $userProduct) {
-                $orderProduct->create(
-                    $orderId,
-                    $userProduct['product_id'],
-                    $userProduct['amount']
-                );
+                $orderProduct->create( $orderId, $userProduct->getProductId(), $userProduct->getAmount());
             }
 
             $cartModel->deleteByUserId($userId);

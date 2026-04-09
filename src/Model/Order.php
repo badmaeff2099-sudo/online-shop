@@ -34,16 +34,22 @@ class Order extends Model
         $stmt->execute(['name' => $contactName, 'phone' => $contactPhone, 'comment' => $comment, 'address' => $address, 'user_id' => $userId]);
 
         $data = $stmt->fetch();
-       // return $data['id'];
-        return $this->mapToOrder->$obj->id = $resultData['id'];
-        return $this->mapToOrder($data);
+       return $data['id'];
     }
 
     public function getAllByUserId($userId): array
     {
         $stmt = $this->PDO->prepare("SELECT * FROM orders WHERE user_id = :userId");
         $stmt->execute(['userId' => $userId]);
-        return $stmt->fetchAll();
+        $results = $stmt->fetchAll();
+
+        $products = [];
+
+        foreach ($results as $result) {
+            $products[] = $this->mapToOrder($result);
+        }
+
+        return $products;
     }
 
     public function getId(): int

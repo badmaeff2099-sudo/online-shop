@@ -34,20 +34,20 @@ $currentPage = $_SERVER['REQUEST_URI'] ?? '';
                 <div class="product-badge">HIT</div>
 
                 <div class="product-image">
-                    <img src="<?php echo $product['image_url']; ?>" alt="product">
+                    <img src="<?php echo $product->getImageUrl(); ?>" alt="product">
                 </div>
 
                 <div class="product-info">
                     <span class="product-name">
-                        <?php echo $product['name']; ?>
+                        <?php echo $product->getName(); ?>
                     </span>
 
                     <h3 class="product-description">
-                        <?php echo $product['description']; ?>
+                        <?php echo $product->getDescription(); ?>
                     </h3>
 
                     <div class="product-price">
-                        <?php echo $product['price']; ?> ₽
+                        <?php echo $product->getPrice() ?> ₽
                     </div>
 
                 </div>
@@ -67,7 +67,7 @@ $currentPage = $_SERVER['REQUEST_URI'] ?? '';
                                     type="hidden"
                                     name="product_id"
                                     id="product_id"
-                                    value="<?php echo $product['id']; ?>"
+                                    value="<?php echo $product->getId(); ?>"
                                     required
                             >
                         </div>

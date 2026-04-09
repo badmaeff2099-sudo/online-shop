@@ -30,7 +30,15 @@ class UserProduct extends Model
 
         $stmt->execute(['userId' => $userId]);
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results =  $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $products = [];
+
+        foreach ($results as $result) {
+            $products[] = $this->mapToUserProduct($result);
+        }
+
+        return $products;
     }
 
     public function deleteByUserId(int $userId): void

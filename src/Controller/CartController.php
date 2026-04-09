@@ -34,11 +34,11 @@ class CartController
 
             $products = [];
             foreach ($userProducts as $userProduct){
-                $productId = $userProduct['product_id'];
+                $productId = $userProduct->getProductId();
 
                 $product = $this->productModel->getProductsByProductId($productId);
 
-                $product['amount'] = $userProduct['amount'];
+                $product['amount'] = $userProduct->getAmount();
 
                 $product['totalPrice'] = $product['amount'] * $product['price'];
                 $products[] = $product;
