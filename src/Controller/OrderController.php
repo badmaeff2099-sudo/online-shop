@@ -10,14 +10,14 @@ use Model\Product;
 
 class OrderController
 {
-    private UserProduct $cartModel;
+    private UserProduct $userProductModel;
     private Order $orderModel;
     private OrderProduct $orderProductModel;
     private Product $productModel;
 
     public function __construct()
     {
-        $this->cartModel = new UserProduct();
+        $this->userProductModel = new UserProduct();
         $this->orderModel = new Order();
         $this->orderProductModel = new OrderProduct();
         $this->productModel = new Product();
@@ -110,8 +110,8 @@ class OrderController
             $orderModel = new Order();
             $orderId = $orderModel->create($contactName, $contactPhone, $comment, $address, $userId);
 
-            $cartModel = new UserProduct();
-            $userProducts = $cartModel->getAllProductsByUserId($userId);
+            $userProductModel = new UserProduct();
+            $userProducts = $userProductModel->getAllProductsByUserId($userId); //cart
 
             $orderProduct = new OrderProduct();
 
@@ -119,7 +119,7 @@ class OrderController
                 $orderProduct->create( $orderId, $userProduct->getProductId(), $userProduct->getAmount());
             }
 
-            $cartModel->deleteByUserId($userId);
+            $userProductModel->deleteByUserId($userId);
 
             $_SESSION['success'] = "Заказ успешно оформлен";
             header("Location: /cart");

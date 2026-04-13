@@ -95,9 +95,10 @@ foreach ($products as $product) {
 
                     <td class="update-cell">
 
-                        <form action="update-cart" method="POST" class="update-form">
+                        <form action="/update-cart" method="POST" class="update-form">
 
-                            <input type="hidden" name="product_id"
+                            <input type="hidden"
+                                   name="product_id"
                                    value="<?= $product['id'] ?>">
 
                             <input type="number"
